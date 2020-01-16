@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="lokasi_masjid">
+        <item>Seluruh Indonesia</item>
+        <item>Depok</item>
+        <item>Bogor</item>
+        <item>Jakarta</item>
+    </string-array>
+</resources>
