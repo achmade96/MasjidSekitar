@@ -34,11 +34,11 @@ class MapActivityModel(application: Application): BaseViewModel(application) {
     private fun displayData(myPlaces: MyPlaces){
 
         if (myPlaces.status.equals("OK")){
-            val restaurants: Array<Results>? = myPlaces.results
-            masjidsList.value = restaurants!!.toList()
+            val masjids: Array<Results>? = myPlaces.results
+            masjidsList.value = masjids!!.toList()
             masjidsListError.value = false
             loading.value = false
-            (restaurants.toList())
+            (masjids.toList())
 
         }else{
             masjidsListError.value = true

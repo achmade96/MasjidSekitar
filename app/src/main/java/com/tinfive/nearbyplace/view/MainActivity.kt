@@ -2,6 +2,7 @@ package com.tinfive.nearbyplace.view
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
@@ -14,28 +15,28 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tinfive.nearbyplace.FilterActivity
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
-import com.tinfive.nearbyplace.utils.Utile
-import com.tinfive.nearbyplace.utils.Utile.Companion.getUrl
+import com.tinfive.nearbyplace.utils.MapHelper
+import com.tinfive.nearbyplace.utils.MapsUtils
+import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
+import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getZoomLevel
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -47,11 +48,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var longitude: Double = 0.0
 
     //Location
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    lateinit var locationRequest: LocationRequest
-    lateinit var locationCallback: LocationCallback
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
 
-    lateinit var viewModel: ListViewModel
+    private lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
 
     private lateinit var mapsModel: MapActivityModel
@@ -64,7 +65,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        mapsModel = ViewModelProviders.of(this).get(MapActivityModel::class.java)
+        mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
 
         val bottomNavigation: BottomNavigationView = this.findViewById(R.id.nav)
 
@@ -144,14 +145,15 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun observeViewMapsModel() {
-        mapsModel.masjidsList.observe(this, Observer { restaurantsList ->
-            restaurantsList?.let {
+        mapsModel.masjidsList.observe(this, Observer { masjidListOnMap ->
+            masjidListOnMap?.let {
                 recycler_masjids.visibility = View.VISIBLE
 
 
-                for (i in 0 until restaurantsList.size) {
+
+                for (i in masjidListOnMap.indices) {
                     val markerOptions = MarkerOptions()
-                    val googlePlace = restaurantsList.get(i)
+                    val googlePlace = masjidListOnMap[i]
                     val lat = googlePlace.geometry!!.location!!.lat
                     val lng = googlePlace.geometry!!.location!!.lng
                     val placeName = googlePlace.name
@@ -162,7 +164,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
                     //Add marker to map
                     mMap.addMarker(markerOptions)
-
                 }
 
                 //Move Camera
@@ -170,7 +171,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
 
-                if (restaurantsList.size <= 0) {
+
+                if (masjidListOnMap.isEmpty()) {
                     listError.text = getString(R.string.masjid_not_found)
                     listError.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
@@ -255,7 +257,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun buildLocationCallback() {
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult?) {
-                mLastLocation = p0!!.locations.get(p0.locations.size - 1) //Get last location
+                mLastLocation = p0!!.locations[p0.locations.size - 1] //Get last location
 
                 if (mMarker != null) {
                     mMarker!!.remove()
@@ -270,16 +272,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("HERE")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
 
+
+
                 mMarker = mMap.addMarker(markerOptions)
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 val cu = CameraUpdateFactory.newLatLngZoom(latLng, 16f)
                 // Animate Camera
                 mMap.animateCamera(cu)
+                mMap.addCircle(CircleOptions()
+                    .strokeColor(Color.argb(255, 56, 167, 252))
+                    .strokeWidth(1f).radius(350.0)
+                    .center(latLng))
 
                 val url = getUrl(latitude, longitude)
 
-                if (Utile.isOnline(this@MainActivity)) {
+                if (MapsUtils.isOnline(this@MainActivity)) {
                     mapsModel.fetchData(url)
                 } else {
                     Toast.makeText(
@@ -321,14 +329,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         when (requestCode) {
             MY_PERMISSION_CODE -> {
-                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(
                             this,
                             android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -338,8 +342,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                             buildLocationRequest()
                             buildLocationCallback()
 
-                            fusedLocationProviderClient =
-                                LocationServices.getFusedLocationProviderClient(this)
+                            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
                             fusedLocationProviderClient.requestLocationUpdates(
                                 locationRequest,
                                 locationCallback,
@@ -356,13 +359,19 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-
         mMap.isMyLocationEnabled = true
         mMap.uiSettings.isCompassEnabled = false
         mMap.uiSettings.isZoomGesturesEnabled = true
         mMap.uiSettings.isRotateGesturesEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = true
+
+
     }
+
+
+
+
+
 
     //VIEW MASJID TAMPILAN 2
     private fun observeViewModel() {
