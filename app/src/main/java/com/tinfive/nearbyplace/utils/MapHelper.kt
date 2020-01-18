@@ -1,3 +1,4 @@
+/*
 package com.tinfive.nearbyplace.utils
 
 import android.content.Context
@@ -10,9 +11,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 internal object MapHelper {
-    /**
+    */
+/**
      * In kilometers.
-     */
+     *//*
+
     private const val EARTH_RADIUS = 6371
 
     fun createPolygonWithCircle(context: Context?, center: LatLng, radius: Int): PolygonOptions {
@@ -54,4 +57,4 @@ internal object MapHelper {
         }
         return result
     }
-}
+}*/

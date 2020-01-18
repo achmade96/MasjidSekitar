@@ -1,12 +1,17 @@
 package com.tinfive.nearbyplace.view
 
+import android.app.SearchManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +36,11 @@ import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
-import com.tinfive.nearbyplace.utils.Utile
-import com.tinfive.nearbyplace.utils.Utile.Companion.getUrl
+import com.tinfive.nearbyplace.utils.MapsUtils
+import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
+import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
 @Suppress("DEPRECATION")
@@ -53,6 +59,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
+
+    private var searchView: SearchView? = null
+    private var myCompositeDisposable = CompositeDisposable()
 
     private lateinit var mapsModel: MapActivityModel
 
@@ -88,9 +97,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //actionbar
-        val actionbar = supportActionBar
+        setSupportActionBar(toolbar)
+
         //set back button
-        actionbar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
 
         initializeComponent()
@@ -144,14 +154,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun observeViewMapsModel() {
-        mapsModel.masjidsList.observe(this, Observer { restaurantsList ->
-            restaurantsList?.let {
+        mapsModel.masjidsList.observe(this, Observer { masjidListMap ->
+            masjidListMap?.let {
                 recycler_masjids.visibility = View.VISIBLE
 
 
-                for (i in 0 until restaurantsList.size) {
+                for (i in 0 until masjidListMap.size) {
                     val markerOptions = MarkerOptions()
-                    val googlePlace = restaurantsList.get(i)
+                    val googlePlace = masjidListMap.get(i)
                     val lat = googlePlace.geometry!!.location!!.lat
                     val lng = googlePlace.geometry!!.location!!.lng
                     val placeName = googlePlace.name
@@ -170,7 +180,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
 
-                if (restaurantsList.size <= 0) {
+                if (masjidListMap.size <= 0) {
                     listError.text = getString(R.string.masjid_not_found)
                     listError.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
@@ -207,7 +217,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //Requeest runtime Permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT >= 24) {
             if (checkLocationPermisson()) {
                 buildLocationRequest()
                 buildLocationCallback()
@@ -279,7 +289,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 val url = getUrl(latitude, longitude)
 
-                if (Utile.isOnline(this@MainActivity)) {
+                if (MapsUtils.isOnline(this@MainActivity)) {
                     mapsModel.fetchData(url)
                 } else {
                     Toast.makeText(
@@ -373,7 +383,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 masjidAdapter.setOnItemClickListener(object :
                     ListMasjidAdapter.OnItemClickListener {
-                    override fun onItemSelected(countries: DataMasjid) {
+                    override fun onItemSelected(masjides: DataMasjid) {
 
 //                        println("PANGGIL MAP ASYU $countries.lat, ${countries.long} ")
                     }
@@ -397,10 +407,52 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
-    //Add back button
-    override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_toolbar, menu)
+
+        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView = menu!!.findItem(R.id.search).actionView as SearchView
+        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
+        searchView!!.maxWidth = Int.MAX_VALUE
+
+        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String): Boolean {
+                masjidAdapter.filter.filter(p0)
+                return false
+
+            }
+
+            override fun onQueryTextChange(p0: String): Boolean {
+                masjidAdapter.filter.filter(p0)
+                return false
+            }
+
+        })
+
         return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        return if (id == R.id.search)
+        {
+            true
+        }
+        else super.onOptionsItemSelected(item)
+    }
+
+
+    //Add back button
+    override fun onBackPressed() {
+        if (!searchView!!.isIconified) {
+            searchView!!.isIconified = true
+            return
+        }
+    }
+
+    override fun onStop() {
+        myCompositeDisposable.clear()
+        super.onStop()
     }
 
 }

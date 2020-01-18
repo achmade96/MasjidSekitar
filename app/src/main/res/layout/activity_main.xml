@@ -23,15 +23,6 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/tvEmpty"
-        android:layout_below="@id/toolbarlayout"
-        android:gravity="center"
-        android:text="There is no user with this name."
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
         android:layout_width="225dp"

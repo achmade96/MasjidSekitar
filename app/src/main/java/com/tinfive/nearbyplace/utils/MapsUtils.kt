@@ -6,6 +6,7 @@ import com.google.android.gms.maps.model.Circle
 import java.lang.StringBuilder
 import kotlin.math.ln
 
+@Suppress("DEPRECATION")
 class MapsUtils {
     companion object{
         fun isOnline(context: Context): Boolean {
@@ -17,7 +18,7 @@ class MapsUtils {
         fun getUrl(latitude: Double, longitude: Double): String {
             val googlePlaceUrl = StringBuilder("maps/api/place/nearbysearch/json")
                 .append("?location=$latitude,$longitude")
-                .append("&radius=2000")
+                .append("&radius=1000")
                 .append("&type=mosque")
                 .append("&key=AIzaSyBHRZoFAHUe_dkkhrclrS5FyH3jAsFgCAk")
 
