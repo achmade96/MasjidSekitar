@@ -1,18 +1,12 @@
 package com.tinfive.nearbyplace.view
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -23,24 +17,28 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.tinfive.nearbyplace.FilterActivity
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
-import com.tinfive.nearbyplace.utils.MapsUtils
-import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
+import com.tinfive.nearbyplace.utils.Utile
+import com.tinfive.nearbyplace.utils.Utile.Companion.getUrl
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    //set location maps
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
     private var mMarker: Marker? = null
@@ -53,15 +51,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
 
-    //set view data masjid
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
 
-    private var searchView: SearchView? = null
-
-    private var myCompositeDisposable = CompositeDisposable()
-
-    //adapter maps
     private lateinit var mapsModel: MapActivityModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -96,9 +88,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //actionbar
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        val actionbar = supportActionBar
         //set back button
+        actionbar!!.setDisplayHomeAsUpEnabled(true)
 
 
         initializeComponent()
@@ -122,38 +114,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         observeViewMapsModel()
 
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        return if (id == R.id.search) {
-            true
-        } else super.onOptionsItemSelected(item)
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_toolbar, menu)
-
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu!!.findItem(R.id.search).actionView as SearchView
-        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView!!.maxWidth = Int.MAX_VALUE
-
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean {
-                masjidAdapter.filter.filter(query)
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String?): Boolean {
-                tvEmpty.visibility = View.GONE
-
-                masjidAdapter.filter.filter(newText)
-                return false
-            }
-
-        })
-        return true
     }
 
     private fun checkLocationPermission(): Boolean {
@@ -184,30 +144,24 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun observeViewMapsModel() {
-        mapsModel.masjidsList.observe(this, Observer { masjidListOnMap ->
-            masjidListOnMap?.let {
+        mapsModel.masjidsList.observe(this, Observer { restaurantsList ->
+            restaurantsList?.let {
                 recycler_masjids.visibility = View.VISIBLE
 
 
-                for (i in 0 until masjidListOnMap.size) {
+                for (i in 0 until restaurantsList.size) {
                     val markerOptions = MarkerOptions()
-                    val googlePlace = masjidListOnMap.get(i)
+                    val googlePlace = restaurantsList.get(i)
                     val lat = googlePlace.geometry!!.location!!.lat
                     val lng = googlePlace.geometry!!.location!!.lng
                     val placeName = googlePlace.name
                     val latLng = LatLng(lat, lng)
 
-                    /*for (Marker marker : markers) {
-                        if (SphericalUtil.computeDistanceBetween(latLng, markerOptions.getPosition(mLastLocation)) < 350.0) {
-                            markerOptions.setVisible(true);
-                        }
-                    }*/
                     markerOptions.position(latLng)
                     markerOptions.title(placeName)
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
                     //Add marker to map
                     mMap.addMarker(markerOptions)
-
 
                 }
 
@@ -216,7 +170,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
 
-                if (masjidListOnMap.size <= 0) {
+                if (restaurantsList.size <= 0) {
                     listError.text = getString(R.string.masjid_not_found)
                     listError.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
@@ -253,7 +207,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         //Requeest runtime Permission
-        if (Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkLocationPermisson()) {
                 buildLocationRequest()
                 buildLocationCallback()
@@ -316,14 +270,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     .title("HERE")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
 
-                //tes
-                mMap.addCircle(
-                    CircleOptions()
-                        .strokeColor(Color.argb(255, 56, 167, 252))
-                        .strokeWidth(1f).radius(350.0)
-                        .center(latLng)
-                )
-
                 mMarker = mMap.addMarker(markerOptions)
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
@@ -331,10 +277,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 // Animate Camera
                 mMap.animateCamera(cu)
 
-
                 val url = getUrl(latitude, longitude)
 
-                if (MapsUtils.isOnline(this@MainActivity)) {
+                if (Utile.isOnline(this@MainActivity)) {
                     mapsModel.fetchData(url)
                 } else {
                     Toast.makeText(
@@ -417,11 +362,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.uiSettings.isZoomGesturesEnabled = true
         mMap.uiSettings.isRotateGesturesEnabled = false
         mMap.uiSettings.isZoomControlsEnabled = true
-        /*// Inform user how to close app (Swipe-To-Close).
-        val duration = Toast.LENGTH_LONG
-        val toast = Toast.makeText(getApplicationContext(), R.string.intro_text, duration)
-        toast.setGravity(Gravity.CENTER, 0, 0)
-        toast.show()*/
     }
 
     //VIEW MASJID TAMPILAN 2
@@ -433,7 +373,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 masjidAdapter.setOnItemClickListener(object :
                     ListMasjidAdapter.OnItemClickListener {
-                    override fun onItemSelected(masjides: DataMasjid) {
+                    override fun onItemSelected(countries: DataMasjid) {
 
 //                        println("PANGGIL MAP ASYU $countries.lat, ${countries.long} ")
                     }
@@ -458,11 +398,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     //Add back button
-    override fun onBackPressed() {
-        if (!searchView!!.isIconified) {
-            searchView!!.isIconified = true
-            return
-        }
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }
