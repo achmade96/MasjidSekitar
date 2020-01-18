@@ -3,12 +3,13 @@
     <string name="title_activity_maps">Masjid Sekitar</string>
     <string name="title_activity_view_directions">Masjid Sekitar</string>
     <string name="error_message">An error occurred while loading data.</string>
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBHkbWKsDCZtTUPn-qW-Lzjzmkbj7_1LmY</string>
+    <string name="google_maps_key" translatable="false">AIzaSyBHkbWKsDCZtTUPn-qW-Lzjzmkbj7_1LmY</string>
     <string name="browser_key">AIzaSyBHkbWKsDCZtTUPn-qW-Lzjzmkbj7_1LmY</string>
     <string name="you_are_offline">You are Offline</string>
     <string name="masjid_not_found">Masjid not found</string>
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_sort">Sort</string>
+    <string name="intro_text">Swipe edge to exit the map.</string>
 
 
 

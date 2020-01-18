@@ -13,7 +13,6 @@ class ListViewModel : ViewModel() {
 
 
     private val masjidSrv = MasjidService()
-    private val googleSrv = MasjidService()
 
     private val disposable = CompositeDisposable()
     val masjid = MutableLiveData<List<DataMasjid>>()
@@ -24,7 +23,6 @@ class ListViewModel : ViewModel() {
         fetchMasjid()
     }
 
-
     private fun fetchMasjid() {
         loading.value = true
         disposable.add(
@@ -34,11 +32,10 @@ class ListViewModel : ViewModel() {
                 .subscribeWith(object : DisposableObserver<List<DataMasjid>>() {
                     override fun onComplete() {
                         loading.value = false
-                        //todo : Load Map Place
                     }
 
                     override fun onNext(t: List<DataMasjid>) {
-                        println("DATA ${t.size}")
+//                        println("DATA ${t.size}")
                         masjid.value = t
                         masjidLoadError.value = false
                         loading.value = false

@@ -26,6 +26,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
 
     }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 dependencies {
@@ -56,7 +60,7 @@ dependencies {
 
 
     //Test Unit
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13'
     testImplementation "org.mockito:mockito-inline:$mockitoVersion"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
@@ -69,4 +73,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.3"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3"
     implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'com.miguelcatalan:materialsearchview:1.4.0'
+    implementation 'com.google.android.material:material:1.0.0'
+
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 }
