@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -35,6 +36,7 @@ import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
+import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
 import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
@@ -74,6 +76,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
 
         mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
+        viewModel = ViewModelProvider(this)[ListViewModel::class.java]
+        viewModel.refresh()
 
         val bottomNavigation: BottomNavigationView = this.findViewById(R.id.nav)
 
@@ -106,14 +110,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         initializeComponent()
         observeViewModel()
 
-        //===========View======================
-        listError.visibility = View.GONE
-
-        recycler_masjids.apply {
-            layoutManager = LinearLayoutManager(this.context)
-            adapter = masjidAdapter
+        swipeRefresh.setOnRefreshListener {
+            swipeRefresh.isRefreshing = false
+            viewModel.refresh()
         }
 
+        //===========View======================
+        listError.visibility = View.GONE
         //=====================================================
 
 
@@ -218,33 +221,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel.refresh()
 
         recycler_masjids.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(
+                EqualSpacingItemDecoration(
+                    12,
+                    EqualSpacingItemDecoration.HORIZONTAL
+                ))
             adapter = masjidAdapter
-        }
-
-        //Requeest runtime Permission
-        if (Build.VERSION.SDK_INT >= 24) {
-            if (checkLocationPermisson()) {
-                buildLocationRequest()
-                buildLocationCallback()
-
-                fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-                fusedLocationProviderClient.requestLocationUpdates(
-                    locationRequest,
-                    locationCallback,
-                    Looper.myLooper()
-                )
-            }
-        } else {
-            buildLocationRequest()
-            buildLocationCallback()
-
-            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-            fusedLocationProviderClient.requestLocationUpdates(
-                locationRequest,
-                locationCallback,
-                Looper.myLooper()
-            )
         }
     }
 
@@ -384,14 +367,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun observeViewModel() {
         viewModel.masjid.observe(this, Observer { masjid ->
             masjid?.let {
+                println("DATA INFORMASI ${it.size}")
                 recycler_masjids.visibility = View.VISIBLE
                 masjidAdapter.updateMasjid(it)
-
-                masjidAdapter.setOnItemClickListener(object :
-                    ListMasjidAdapter.OnItemClickListener {
+                masjidAdapter.setOnItemClickListener(object : ListMasjidAdapter.OnItemClickListener {
                     override fun onItemSelected(masjides: DataMasjid) {
-
-//                        println("PANGGIL MAP ASYU $masjides.lat, ${masjides.long} ")
+//                        setOnClickItem(masjides.mosqueName)
                     }
 
                 })
@@ -454,30 +435,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onQueryTextChange(query: String): Boolean {
                 masjidAdapter.filter.filter(query);
 //                println("DATA ACTIVITY $query")
-
-                /*//action while typing
-
-                //hiding the empty textview
-                tvEmpty.visibility = View.VISIBLE
-                if (p0.isEmpty()) {
-                    recycler_masjids.adapter = adapter
-                } else {
-                    *//*filteredUsers.clear()
-                    for (user in users) {
-                        if (user.nama_masjid.toLowerCase().contains(p0.toLowerCase())) {
-                            filteredUsers.add(user)
-                        }
-                    }
-                    if (filteredUsers.isEmpty()) {
-                        tvEmpty.visibility = View.VISIBLE
-                        recycler_masjids.visibility = View.VISIBLE
-                    } else {
-                        recycler_masjids.visibility = View.VISIBLE
-                        tvEmpty.visibility = View.GONE
-                    }*//*
-                    recycler_masjids.adapter = filteredAdapter
-                }
-                masjidAdapter.filter.filter(p0)*/
                 return false
             }
 

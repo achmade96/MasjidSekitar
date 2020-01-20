@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Find Mosque</string>
+    <string name="app_name">Yuk Amal</string>
     <string name="title_activity_maps">Masjid Sekitar</string>
-    <string name="title_activity_view_directions">Masjid Sekitar</string>
+    <string name="title_activity_view_directions">Yuk Amal</string>
     <string name="error_message">An error occurred while loading data.</string>
     <string name="google_maps_key" translatable="false">AIzaSyBHkbWKsDCZtTUPn-qW-Lzjzmkbj7_1LmY</string>
     <string name="browser_key">AIzaSyBHkbWKsDCZtTUPn-qW-Lzjzmkbj7_1LmY</string>
@@ -10,6 +10,7 @@
     <string name="title_activity_filter">Filter</string>
     <string name="title_activity_sort">Sort</string>
     <string name="intro_text">Swipe edge to exit the map.</string>
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://yukamal.com:80/.well-known/assetlinks.json\" }]</string>
 
 
 

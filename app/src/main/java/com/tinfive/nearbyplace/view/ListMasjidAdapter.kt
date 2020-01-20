@@ -10,13 +10,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.model.DataMasjid
+import com.tinfive.nearbyplace.model.*
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
 
 @Suppress("NAME_SHADOWING", "UNCHECKED_CAST")
-class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
+class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
+    RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
 
     private var context: Context? = null
     private var masjidListFilter: MutableList<DataMasjid>
@@ -24,6 +25,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
     init {
         masjidListFilter = masjid
     }
+
     private var mOnItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
@@ -72,73 +74,130 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
         }
 
         fun bind(position: Int) {
-            val (id,
-                kabkota,
-                kecamatan,
-                nama_masjid,
-                tipologi,
-                alamat,
-                lat,
-                long,
-                foto) = masjidListFilter[position]
+            val (
+                mosqueId,
+                mosqueType,
+                mosqueCode,
+                mosqueName,
+                mosqueIdentity,
+                surfaceArea,
+                buildingArea,
+                los,
+                since,
+                bankId,
+                rek,
+                address,
+                latitude,
+                longitude,
+                provinceId,
+                estimate,
+                estimateDate,
+                cityId,
+                kecId,
+                kelId,
+                pic,
+                description,
+                bank  ,
+                province,
+                regency,
+                district,
+                village
+            ) = masjidListFilter[position]
             inflateData(
-                id,
-                kabkota,
-                kecamatan,
-                nama_masjid,
-                tipologi,
-                alamat,
-                lat,
-                long,
-                foto
+                mosqueId,
+                mosqueType,
+                mosqueCode,
+                mosqueName,
+                mosqueIdentity,
+                surfaceArea,
+                buildingArea,
+                los,
+                since,
+                bankId,
+                rek,
+                address,
+                latitude,
+                longitude,
+                provinceId,
+                estimate,
+                estimateDate,
+                cityId,
+                kecId,
+                kelId,
+                pic,
+                description,
+                bank  ,
+                province,
+                regency,
+                district,
+                village
             )
         }
 
         private fun inflateData(
-            id: Int,
-            kabkota: String,
-            kecamatan: String,
-            nama_masjid: String,
-            tipologi: String,
-            alamat: String,
-            lat: Double,
-            long: Double,
-            foto: String
+            mosqueId: Int,
+            mosqueType: String,
+            mosqueCode: String,
+            mosqueName: String,
+            mosqueIdentity: String,
+            surfaceArea: String,
+            buildingArea: String,
+            los: String,
+            since: String,
+            bankId: String,
+            rek: String,
+            address: String,
+            latitude: String,
+            longitude: String,
+            provinceId: String,
+            estimate: String,
+            estimateDate: String,
+            cityId: String,
+            kecId: String,
+            kelId: String,
+            pic: String,
+            description: String,
+            bank : Bank,
+            province: Province,
+            regency: Regency,
+            district: District,
+            village: String
         ) {
             val progressDrawable: CircularProgressDrawable = getProgressDrawable(itemView.context)
 
 
-            nama_masjid.let {
+            mosqueName.let {
                 itemView.titleTv.text = it
             }
-            alamat.let {
-                itemView.descTv.text = String.format("%s, %s, %s", it, kecamatan, kabkota)
+            address.let {
+                itemView.descTv.text = it
+//                    String.format("%s, %s, %s, %s", it, province, regency, district)
             }
-            foto.let {
+            pic.let {
                 itemView.iconIv.loadImage(it, progressDrawable)
             }
 
             itemView.setOnClickListener({
-                Toast.makeText(itemView.context, "Anda Mengklik "+nama_masjid, Toast.LENGTH_SHORT).show()
+                Toast.makeText(itemView.context, "Anda Mengklik " + mosqueName, Toast.LENGTH_SHORT).show()
             })
 
         }
     }
 
     override fun getFilter(): Filter {
-        return object : Filter(){
+        return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults {
                 val charString = charSequence.toString()
                 if (charString.isEmpty()) {
                     masjidListFilter = masjid
                 } else {
 
-                    val filteredList : MutableList<DataMasjid>  =  ArrayList()
-                    println("DATA ${listOf(filteredList)}")
-                    for (row in masjid){
-                        if (row.nama_masjid.toLowerCase().contains(charString.toLowerCase()) ) {
+                    val filteredList: MutableList<DataMasjid> = ArrayList()
+//                    println("DATA ${listOf(filteredList)}")
+                    for (row in masjid) {
+                        if (row.mosqueName.toLowerCase().contains(charString.toLowerCase())) {
 
-                            filteredList.add(row);
+                            filteredList.add(row)
                         }
                     }
                     masjidListFilter = filteredList

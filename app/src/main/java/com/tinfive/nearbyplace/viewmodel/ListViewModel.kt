@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.MasjidService
+import com.tinfive.nearbyplace.networks.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
@@ -24,6 +25,24 @@ class ListViewModel : ViewModel() {
     }
 
     private fun fetchMasjid() {
+        loading.value = true
+        disposable.add(RetrofitClient.getMosqueList().getMosque()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ mosqueRespons ->
+                println("Mosque ${mosqueRespons}")
+                masjid.value = mosqueRespons
+                masjidLoadError.value = false
+                loading.value = false
+            },{err->
+                masjidLoadError.value = true
+                loading.value = false
+            })
+        )
+    }
+
+
+    /*private fun fetchMasjid() {
         loading.value = true
         disposable.add(
             masjidSrv.getMasjid()
@@ -49,7 +68,7 @@ class ListViewModel : ViewModel() {
                 })
         )
 
-    }
+    }*/
 
     override fun onCleared() {
         super.onCleared()
