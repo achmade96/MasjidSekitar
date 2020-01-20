@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
@@ -13,14 +14,16 @@ import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
-import java.util.*
-import kotlin.collections.ArrayList
 
 @Suppress("NAME_SHADOWING", "UNCHECKED_CAST")
 class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
 
     private var context: Context? = null
+    private var masjidListFilter: MutableList<DataMasjid>
 
+    init {
+        masjidListFilter = masjid
+    }
     private var mOnItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
@@ -34,7 +37,8 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
 
     }
 
-    override fun getItemCount(): Int = masjid.size
+    override fun getItemCount(): Int = masjidListFilter.size
+
 
     override fun onBindViewHolder(holder: MasjidViewHolder, position: Int) {
         holder.clear()
@@ -48,7 +52,6 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
 
     }
 
-
     internal fun setOnItemClickListener(listener: OnItemClickListener) {
         mOnItemClickListener = listener
     }
@@ -57,7 +60,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
         View.OnClickListener {
 
         override fun onClick(v: View?) {
-            mOnItemClickListener?.onItemSelected(masjid[adapterPosition])
+            mOnItemClickListener?.onItemSelected(masjidListFilter[adapterPosition])
         }
 
 
@@ -77,7 +80,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
                 alamat,
                 lat,
                 long,
-                foto) = masjid[position]
+                foto) = masjidListFilter[position]
             inflateData(
                 id,
                 kabkota,
@@ -108,45 +111,55 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
             nama_masjid.let {
                 itemView.titleTv.text = it
             }
-
-//            println(alamat)
-
             alamat.let {
                 itemView.descTv.text = String.format("%s, %s, %s", it, kecamatan, kabkota)
             }
-
             foto.let {
                 itemView.iconIv.loadImage(it, progressDrawable)
             }
-            itemView.setOnClickListener(this)
+
+            itemView.setOnClickListener({
+                Toast.makeText(itemView.context, "Anda Mengklik "+nama_masjid, Toast.LENGTH_SHORT).show()
+            })
+
         }
     }
 
     override fun getFilter(): Filter {
         return object : Filter(){
-            override fun performFiltering(charString: CharSequence?): FilterResults {
-                val charSearch = charString.toString()
-                if(charSearch.isEmpty())
-                    masjid
-                else{
-                    val masjidList = ArrayList<DataMasjid>()
-                    for (row in masjid) {
-                        if (row.nama_masjid.toLowerCase(Locale.getDefault()).contains(charSearch.toLowerCase(
-                                Locale.getDefault())))
-                            masjidList.add(row)
+            override fun performFiltering(charSequence: CharSequence): FilterResults {
+                val charString = charSequence.toString()
+                if (charString.isEmpty()) {
+                    masjidListFilter = masjid
+                } else {
+
+                    val filteredList : MutableList<DataMasjid>  =  ArrayList()
+                    println("DATA ${listOf(filteredList)}")
+                    for (row in masjid){
+                        if (row.nama_masjid.toLowerCase().contains(charString.toLowerCase()) ) {
+
+                            filteredList.add(row);
+                        }
                     }
-                    masjid = masjidList
+                    masjidListFilter = filteredList
                 }
-                val filtersMasjid = Filter.FilterResults()
-                filtersMasjid.values=masjid
-                return filtersMasjid
+                val filterResults = FilterResults()
+
+
+                filterResults.values = masjidListFilter
+                println("DATA ADAPTER ${filterResults}")
+                return filterResults
             }
 
-            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
-                masjid = results!!.values as MutableList<DataMasjid>
+            override fun publishResults(constraint: CharSequence, results: FilterResults) {
+                masjidListFilter = results.values as ArrayList<DataMasjid>
                 notifyDataSetChanged()
             }
 
         }
     }
+
+
 }
+
+

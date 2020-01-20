@@ -9,17 +9,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Looper
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.SearchView
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -60,6 +59,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
 
+
     private var searchView: SearchView? = null
     private var myCompositeDisposable = CompositeDisposable()
 
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        mapsModel = ViewModelProviders.of(this).get(MapActivityModel::class.java)
+        mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
 
         val bottomNavigation: BottomNavigationView = this.findViewById(R.id.nav)
 
@@ -108,8 +108,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         //===========View======================
         listError.visibility = View.GONE
-        recycler_masjids.setHasFixedSize(true)
-        recycler_masjids.layoutManager = LinearLayoutManager(this)
+
+        recycler_masjids.apply {
+            layoutManager = LinearLayoutManager(this.context)
+            adapter = masjidAdapter
+        }
+
         //=====================================================
 
 
@@ -166,6 +170,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     val lng = googlePlace.geometry!!.location!!.lng
                     val placeName = googlePlace.name
                     val latLng = LatLng(lat, lng)
+
+//                    if (SphericalUtil.computeDistanceBetween(latLng, markerOptions.getPosition()) < 1000)
 
                     markerOptions.position(latLng)
                     markerOptions.title(placeName)
@@ -385,7 +391,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     ListMasjidAdapter.OnItemClickListener {
                     override fun onItemSelected(masjides: DataMasjid) {
 
-//                        println("PANGGIL MAP ASYU $countries.lat, ${countries.long} ")
+//                        println("PANGGIL MAP ASYU $masjides.lat, ${masjides.long} ")
                     }
 
                 })
@@ -407,23 +413,76 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
 
-        val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView = menu!!.findItem(R.id.search).actionView as SearchView
-        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(componentName))
-        searchView!!.maxWidth = Int.MAX_VALUE
+        //getting the search view from the menu
+        val searchViewItem = menu!!.findItem(R.id.search)
+        //getting the search view
+        val searchView = searchViewItem.actionView as SearchView
 
-        searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(p0: String): Boolean {
-                masjidAdapter.filter.filter(p0)
-                return false
+        /*val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))*/
+
+        searchView.setOnSearchClickListener {
+            //            println("ONCLICK SERACH ")
+            if (map.isVisible == true) {
+                map.view?.visibility = View.GONE
+                changeLayoutView()
+            } else {
+                map.view?.visibility = View.VISIBLE
+            }
+        }
+
+        searchView.setOnCloseListener {
+            if (map.isVisible == false) {
+                map.view?.visibility = View.VISIBLE
+                changeBackLayoutView()
 
             }
 
-            override fun onQueryTextChange(p0: String): Boolean {
-                masjidAdapter.filter.filter(p0)
+            observeViewModel()
+
+            false
+        }
+        searchView.maxWidth = Int.MAX_VALUE
+        searchView.queryHint = "Cari Masjid Sekitar"
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(query: String): Boolean {
+                masjidAdapter.filter.filter(query);
+//                println("DATA ACTIVITY $query")
+
+                /*//action while typing
+
+                //hiding the empty textview
+                tvEmpty.visibility = View.VISIBLE
+                if (p0.isEmpty()) {
+                    recycler_masjids.adapter = adapter
+                } else {
+                    *//*filteredUsers.clear()
+                    for (user in users) {
+                        if (user.nama_masjid.toLowerCase().contains(p0.toLowerCase())) {
+                            filteredUsers.add(user)
+                        }
+                    }
+                    if (filteredUsers.isEmpty()) {
+                        tvEmpty.visibility = View.VISIBLE
+                        recycler_masjids.visibility = View.VISIBLE
+                    } else {
+                        recycler_masjids.visibility = View.VISIBLE
+                        tvEmpty.visibility = View.GONE
+                    }*//*
+                    recycler_masjids.adapter = filteredAdapter
+                }
+                masjidAdapter.filter.filter(p0)*/
+                return false
+            }
+
+            override fun onQueryTextSubmit(result: String): Boolean {
+                masjidAdapter.filter.filter(result)
                 return false
             }
 
@@ -432,14 +491,26 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    private fun changeBackLayoutView() {
+        val params: ViewGroup.LayoutParams = recycler_masjids.layoutParams
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        recycler_masjids.layoutParams = params
+    }
+
+    private fun changeLayoutView() {
+        val params: ViewGroup.LayoutParams = recycler_masjids.layoutParams
+        params.height = ViewGroup.LayoutParams.MATCH_PARENT
+        recycler_masjids.layoutParams = params
+    }
+
+    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         return if (id == R.id.search)
         {
             true
         }
         else super.onOptionsItemSelected(item)
-    }
+    }*/
 
 
     //Add back button

@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".view.MainActivity"
     android:orientation="vertical"
-    android:weightSum="2">
+    android:weightSum="2"
+    tools:context=".view.MainActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/toolbarlayout"
-        style="@style/AppTheme.AppBarOverlay"
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/tvEmpty"
+        android:layout_below="@id/toolbar"
+        android:gravity="center"
+        android:text="There is no user with this name."
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent" />
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:background="@color/WhiteColor" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
@@ -38,32 +40,32 @@
         app:menu="@menu/menu_filter" />
 
     <fragment
-        android:layout_below="@+id/toolbarlayout"
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="300dp" />
+        android:layout_height="300dp"
+        android:layout_below="@+id/toolbar" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_masjids"
-        android:scrollbars="vertical"
-        android:layout_below="@+id/map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/map"
+        android:scrollbars="vertical" />
 
     <TextView
         android:id="@+id/listError"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="An error occured while loading data"
+        android:layout_centerInParent="true"
         android:layout_margin="8dp"
         android:padding="5dp"
-        android:layout_centerInParent="true"/>
+        android:text="An error occured while loading data" />
 
     <ProgressBar
         android:id="@+id/loadingView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>

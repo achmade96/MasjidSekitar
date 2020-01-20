@@ -35,7 +35,7 @@
             android:name=".view.MainActivity" android:theme="@style/AppTheme.NoActionBar"
             android:label="@string/title_activity_maps">
 
-            <meta-data android:name="android.app.searchable"
+            <meta-data android:name="androidx.app.searchable"
                 android:resource="@xml/searchable"/>
 
             <intent-filter>

@@ -8,6 +8,7 @@
         android:icon="@drawable/search_icon"
         app:showAsAction="always"
         android:orderInCategory="100"
-        app:actionViewClass="android.widget.SearchView" />
+        android:searchSuggestThreshold="3"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
 </menu>
