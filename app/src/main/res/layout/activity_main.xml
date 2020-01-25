@@ -1,80 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="2"
-    tools:context=".view.MainActivity">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <TextView
-        android:visibility="gone"
-        android:id="@+id/tvEmpty"
-        android:layout_below="@id/toolbar"
-        android:gravity="center"
-        android:text="There is no user with this name."
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:weightSum="2">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:background="@color/WhiteColor" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="top"
+            app:layout_anchorGravity="top" />
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@+id/toolbar"
+            app:layout_constraintDimensionRatio="w,50:1" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="401dp"
+            android:layout_height="310dp"
+            android:layout_below="@+id/map"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="0dp"
+            app:layout_anchor="@+id/map"
+            app:layout_anchorGravity="bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/map">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_masjids"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
+
+            <TextView
+                android:id="@+id/listError"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_margin="8dp"
+                android:padding="5dp"
+                android:text="An error occured while loading data" />
+
+            <ProgressBar
+                android:id="@+id/loadingView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </RelativeLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
         android:layout_width="225dp"
         android:layout_height="50dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="100dp"
-        android:layout_marginEnd="100dp"
+        android:layout_gravity="bottom|center"
         android:layout_marginBottom="20dp"
         android:background="@drawable/button_background_filter"
         app:itemTextColor="#000000"
+        app:layout_anchorGravity="bottom"
         app:menu="@menu/menu_filter" />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@+id/toolbar" />
+    <include layout="@layout/bottom_sheet" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/map"
-        android:id="@+id/swipeRefresh">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_masjids"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
-        <TextView
-            android:id="@+id/listError"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_margin="8dp"
-            android:padding="5dp"
-            android:text="An error occured while loading data" />
-
-        <ProgressBar
-            android:id="@+id/loadingView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
-
-</RelativeLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

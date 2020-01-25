@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottomSheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="0dp"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <CheckBox
+        android:id="@+id/tv_car"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_directions_car_black_24dp"
+        android:drawableStart="@drawable/ic_directions_car_black_24dp"
+        android:text="Mobil"
+        android:textSize="16sp"
+        tools:ignore="MissingConstraints" />
+
+    <View
+        android:id="@+id/facebookView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bdbdbd"
+        app:layout_constraintTop_toBottomOf="@id/tv_car" />
+
+    <CheckBox
+        android:id="@+id/tv_motor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:text="Motor"
+        android:gravity="center_vertical"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_motorcycle_black_24dp"
+        android:drawableStart="@drawable/ic_motorcycle_black_24dp"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/facebookView" />
+
+    <View
+        android:id="@+id/twitterView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bdbdbd"
+        app:layout_constraintTop_toBottomOf="@id/tv_motor" />
+
+    <CheckBox
+        android:id="@+id/tv_wifi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_wifi_tethering_black_24dp"
+        android:drawableStart="@drawable/ic_wifi_tethering_black_24dp"
+        android:text="Wifi"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/twitterView" />
+
+    <View
+        android:id="@+id/instagramView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bdbdbd"
+        app:layout_constraintTop_toBottomOf="@id/tv_wifi" />
+
+    <CheckBox
+        android:id="@+id/tv_ac"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_ac_unit_black_24dp"
+        android:drawableStart="@drawable/ic_ac_unit_black_24dp"
+        android:text="Ac"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/instagramView" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#bdbdbd"
+        app:layout_constraintTop_toBottomOf="@id/tv_ac" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

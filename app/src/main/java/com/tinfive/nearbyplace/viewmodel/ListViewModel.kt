@@ -34,7 +34,7 @@ class ListViewModel : ViewModel() {
                 masjid.value = mosqueRespons
                 masjidLoadError.value = false
                 loading.value = false
-            },{err->
+            },{
                 masjidLoadError.value = true
                 loading.value = false
             })

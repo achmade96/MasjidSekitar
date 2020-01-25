@@ -12,6 +12,9 @@
     <string name="intro_text">Swipe edge to exit the map.</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://yukamal.com:80/.well-known/assetlinks.json\" }]</string>
 
-
+    <string name="action_car">Parkir Mobil</string>
+    <string name="action_motor">Parkir Motor</string>
+    <string name="action_wifi">Free Wifi</string>
+    <string name="action_ac">Air Conditioner</string>
 
 </resources>

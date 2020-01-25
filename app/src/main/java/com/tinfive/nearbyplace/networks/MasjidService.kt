@@ -18,8 +18,6 @@ class MasjidService {
         .build()
         .create(MasjidApi::class.java)
 
-
-
     fun getMasjid(): Observable<List<DataMasjid>> {
         return api.getMosque()
     }

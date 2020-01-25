@@ -1,6 +1,8 @@
 package com.tinfive.nearbyplace.utils
 
 import android.content.Context
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
@@ -24,6 +26,12 @@ fun ImageView.loadImage(url: String?, progressDrawable: CircularProgressDrawable
         .setDefaultRequestOptions(options)
         .load(url)
         .into(this)
+}
 
-
+fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
+    if (view.getLayoutParams() is MarginLayoutParams) {
+        val p = view.getLayoutParams() as MarginLayoutParams
+        p.setMargins(left, top, right, bottom)
+        view.requestLayout()
+    }
 }

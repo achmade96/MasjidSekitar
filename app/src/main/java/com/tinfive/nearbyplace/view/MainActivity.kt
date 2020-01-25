@@ -1,7 +1,5 @@
 package com.tinfive.nearbyplace.view
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -15,12 +13,12 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -30,8 +28,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.tinfive.nearbyplace.FilterActivity
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
@@ -39,13 +36,17 @@ import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
 import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
+import com.tinfive.nearbyplace.utils.setMargins
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.bottom_sheet.*
 
-@Suppress("DEPRECATION")
+
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    //MAPS
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
     private var mMarker: Marker? = null
@@ -61,7 +62,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
 
-
     private var searchView: SearchView? = null
     private var myCompositeDisposable = CompositeDisposable()
 
@@ -71,44 +71,35 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-
         mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
         viewModel.refresh()
 
-        val bottomNavigation: BottomNavigationView = this.findViewById(R.id.nav)
+        initBottom()
 
-        bottomNavigation.setOnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-
-                R.id.btn_filter -> {
-                    supportFragmentManager
-                        .beginTransaction()
-                    val intent = Intent(this, FilterActivity::class.java)
-                    startActivity(intent)
-                }
+        nav.setOnNavigationItemSelectedListener { p0 ->
+            when (p0.itemId) {
                 R.id.btn_sort -> {
                     supportFragmentManager
                         .beginTransaction()
-                    val intent = Intent(this, SortActivity::class.java)
+                    val intent = Intent(this@MainActivity, SortActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.btn_filter -> {
+                    slideUpDownBottomSheet()
+                }
             }
+
             true
         }
 
+        observeViewModel()
+        initializeComponent()
+
         //actionbar
         setSupportActionBar(toolbar)
-
         //set back button
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-
-        initializeComponent()
-        observeViewModel()
 
         swipeRefresh.setOnRefreshListener {
             swipeRefresh.isRefreshing = false
@@ -118,7 +109,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //===========View======================
         listError.visibility = View.GONE
         //=====================================================
-
 
         //Request runtime permission
         if (Build.VERSION.SDK_INT >= 24) {
@@ -131,6 +121,62 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         observeViewMapsModel()
 
+    }
+
+    private fun initBottom() {
+        tv_car.setOnClickListener {
+            Toast.makeText(this,"Parkir Mobil",Toast.LENGTH_SHORT).show()
+        }
+        tv_motor.setOnClickListener {
+            Toast.makeText(this,"Parkir Motor",Toast.LENGTH_SHORT).show()
+        }
+        tv_wifi.setOnClickListener {
+            Toast.makeText(this,"Free Wifi",Toast.LENGTH_SHORT).show()
+        }
+        tv_ac.setOnClickListener {
+            Toast.makeText(this,"Air Conditioner",Toast.LENGTH_SHORT).show()
+        }
+        bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(bottomSheet)
+        bottomSheetBehavior.setBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+            }
+            override fun onStateChanged(p0: View, p1: Int) {
+                when (p1) {
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                    }
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        changeToDown()
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                    }
+
+                }
+            }
+
+        })
+    }
+
+    private fun slideUpDownBottomSheet() {
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+            changeToTop()
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            changeToDown()
+        }
+    }
+
+    private fun changeToDown() {
+        setMargins(nav, 5, 0, 5, 20)
+    }
+
+    private fun changeToTop() {
+        setMargins(nav, 5, 0, 5, 700)
     }
 
     private fun checkLocationPermission(): Boolean {
@@ -161,6 +207,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun observeViewMapsModel() {
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
         mapsModel.masjidsList.observe(this, Observer { masjidListMap ->
             masjidListMap?.let {
                 recycler_masjids.visibility = View.VISIBLE
@@ -181,7 +231,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     markerOptions.icon(BitmapDescriptorFactory.defaultMarker())
                     //Add marker to map
                     mMap.addMarker(markerOptions)
-
                 }
 
                 //Move Camera
@@ -195,7 +244,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     loadingView.visibility = View.GONE
                     recycler_masjids.visibility = View.GONE
                 }
-
             }
         })
 
@@ -226,7 +274,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 EqualSpacingItemDecoration(
                     12,
                     EqualSpacingItemDecoration.HORIZONTAL
-                ))
+                )
+            )
             adapter = masjidAdapter
         }
     }
@@ -264,12 +313,12 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 longitude = mLastLocation.longitude
 
                 val latLng = LatLng(latitude, longitude)
-                val markerOptions = MarkerOptions()
+                /*val markerOptions = MarkerOptions()
                     .position(latLng)
                     .title("HERE")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
 
-                mMarker = mMap.addMarker(markerOptions)
+                mMarker = mMap.addMarker(markerOptions)*/
 
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 val cu = CameraUpdateFactory.newLatLngZoom(latLng, 16f)
@@ -367,14 +416,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun observeViewModel() {
         viewModel.masjid.observe(this, Observer { masjid ->
             masjid?.let {
-                println("DATA INFORMASI ${it.size}")
                 recycler_masjids.visibility = View.VISIBLE
                 masjidAdapter.updateMasjid(it)
-                masjidAdapter.setOnItemClickListener(object : ListMasjidAdapter.OnItemClickListener {
+                masjidAdapter.setOnItemClickListener(object :
+                    ListMasjidAdapter.OnItemClickListener {
                     override fun onItemSelected(masjides: DataMasjid) {
-//                        setOnClickItem(masjides.mosqueName)
+                        setOnClickItem(masjides.mosqueName)
                     }
-
                 })
             }
         })
@@ -394,6 +442,13 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         })
     }
 
+    private fun setOnClickItem(mosqueName: String) {
+        val intent = Intent(this, SortActivity::class.java)
+        intent.putExtra("key", mosqueName)
+        startActivity(intent)
+    }
+
+    //SEARCH OPTION
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
@@ -403,11 +458,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //getting the search view
         val searchView = searchViewItem.actionView as SearchView
 
-        /*val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(componentName))*/
-
         searchView.setOnSearchClickListener {
-            //            println("ONCLICK SERACH ")
             if (map.isVisible == true) {
                 map.view?.visibility = View.GONE
                 changeLayoutView()
@@ -420,31 +471,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             if (map.isVisible == false) {
                 map.view?.visibility = View.VISIBLE
                 changeBackLayoutView()
-
             }
-
             observeViewModel()
-
             false
         }
         searchView.maxWidth = Int.MAX_VALUE
         searchView.queryHint = "Cari Masjid Sekitar"
-
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
             override fun onQueryTextChange(query: String): Boolean {
-                masjidAdapter.filter.filter(query);
+                masjidAdapter.filter.filter(query)
 //                println("DATA ACTIVITY $query")
                 return false
             }
-
             override fun onQueryTextSubmit(result: String): Boolean {
                 masjidAdapter.filter.filter(result)
                 return false
             }
-
         })
-
         return true
     }
 
@@ -459,15 +502,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT
         recycler_masjids.layoutParams = params
     }
-
-    /*override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        return if (id == R.id.search)
-        {
-            true
-        }
-        else super.onOptionsItemSelected(item)
-    }*/
+    //END SEARCH OPTION
 
 
     //Add back button
@@ -482,6 +517,5 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         myCompositeDisposable.clear()
         super.onStop()
     }
-
 }
 

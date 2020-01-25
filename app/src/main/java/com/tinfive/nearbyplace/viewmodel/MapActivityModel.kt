@@ -21,7 +21,7 @@ class MapActivityModel(application: Application): BaseViewModel(application) {
 
     fun fetchData(url:String) {
         loading.value = true
-        myCompositeDisposable.add(jsonApi.getNearbyPlaces(url)
+        myCompositeDisposable.add(jsonApi.getMarkerPlace(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({myPlaces -> displayData(myPlaces)} ,

@@ -97,7 +97,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
                 kelId,
                 pic,
                 description,
-                bank  ,
+                bank,
                 province,
                 regency,
                 district,
@@ -126,7 +126,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
                 kelId,
                 pic,
                 description,
-                bank  ,
+                bank,
                 province,
                 regency,
                 district,
@@ -157,7 +157,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
             kelId: String,
             pic: String,
             description: String,
-            bank : Bank,
+            bank: Bank,
             province: Province,
             regency: Regency,
             district: District,
@@ -177,10 +177,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
                 itemView.iconIv.loadImage(it, progressDrawable)
             }
 
-            itemView.setOnClickListener({
-                Toast.makeText(itemView.context, "Anda Mengklik " + mosqueName, Toast.LENGTH_SHORT).show()
-            })
-
+            itemView.setOnClickListener(this)
         }
     }
 
@@ -206,7 +203,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
 
 
                 filterResults.values = masjidListFilter
-                println("DATA ADAPTER ${filterResults}")
+//                println("DATA ADAPTER ${filterResults}")
                 return filterResults
             }
 

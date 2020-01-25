@@ -1,5 +1,6 @@
 package com.tinfive.nearbyplace.networks
 
+import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.networks.EndPoint.BASE_URL_MAPS
 import com.tinfive.nearbyplace.networks.EndPoint.BASE_URL_MASJID
 import retrofit2.Retrofit
@@ -30,5 +31,4 @@ object RetrofitClient {
         .client(ApiWorker.client)
         .build()
         .create(MasjidApi::class.java)
-
 }
