@@ -9,7 +9,6 @@ import android.os.Looper
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -28,11 +27,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
-import com.tinfive.nearbyplace.model.DataMasjid
 import com.tinfive.nearbyplace.model.Fasilitas
+import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
@@ -41,12 +39,10 @@ import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     var fasilitasList: MutableList<Fasilitas> = mutableListOf()
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     //MAPS
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
@@ -63,9 +59,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     //List Masjid
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
-    private val facilitiesAdapter = MultipleChooseAdapter(ArrayList())
 
-
+    //Search View
     private var searchView: SearchView? = null
     private var myCompositeDisposable = CompositeDisposable()
 
@@ -373,7 +368,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 masjidAdapter.updateMasjid(it)
                 masjidAdapter.setOnItemClickListener(object :
                     ListMasjidAdapter.OnItemClickListener {
-                    override fun onItemSelected(masjides: DataMasjid) {
+                    override fun onItemSelected(masjides: MasjidModel) {
                         setOnClickItem(masjides.mosqueName)
                     }
                 })
@@ -394,9 +389,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
         viewModel.fasilitasData.observe(this, Observer { fasilitas ->
-            fasilitas?.let{
+            fasilitas?.let {
                 fasilitasList.addAll(it)
-
 
 
             }
@@ -470,7 +464,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun showBottomSheetDialogFragment() {
         val bottomSheetFragment = FasilitasFragment.newInstance(fasilitasList)
         bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
-       println("DATA SIZEE ${fasilitasList.size}")
+        println("DATA SIZEE ${fasilitasList.size}")
 
     }
 

@@ -1,7 +1,5 @@
 package com.tinfive.nearbyplace.networks
 
-import com.tinfive.nearbyplace.model.DataMasjid
-
 object EndPoint {
 
     const val BASE_URL_MAPS : String = "https://maps.googleapis.com/"

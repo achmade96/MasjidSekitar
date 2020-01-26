@@ -7,5 +7,5 @@ data class Regency (
 
     @SerializedName("name")
     @Expose
-    val name: String
+    val regencyName: String
 )

@@ -7,5 +7,5 @@ data class District (
 
     @SerializedName("name")
     @Expose
-    val name: String
+    val districtName: String
 )

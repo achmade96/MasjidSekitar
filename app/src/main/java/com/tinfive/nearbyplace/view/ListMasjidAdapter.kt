@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
@@ -16,10 +15,11 @@ import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
 
 
-class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
+class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
+    RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
 
     private var context: Context? = null
-    private var masjidListFilter: MutableList<DataMasjid>
+    private var masjidListFilter: MutableList<MasjidModel>
 
     init {
         masjidListFilter = masjid
@@ -28,7 +28,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
     private var mOnItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemSelected(masjides: DataMasjid)
+        fun onItemSelected(masjides: MasjidModel)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MasjidViewHolder {
@@ -45,7 +45,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
         holder.bind(position)
     }
 
-    fun updateMasjid(masjidApiUpdate: List<DataMasjid>) {
+    fun updateMasjid(masjidApiUpdate: List<MasjidModel>) {
         this.masjid.clear()
         this.masjid.addAll(masjidApiUpdate)
         notifyDataSetChanged()
@@ -68,7 +68,6 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
             itemView.titleTv.text = ""
             itemView.descTv.text = ""
             itemView.iconIv.setImageDrawable(null)
-
         }
 
         fun bind(position: Int) {
@@ -80,19 +79,15 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
                 mosqueIdentity,
                 surfaceArea,
                 buildingArea,
+                kelId,
                 los,
                 since,
-                bankId,
                 rek,
                 address,
                 latitude,
                 longitude,
-                provinceId,
                 estimate,
                 estimateDate,
-                cityId,
-                kecId,
-                kelId,
                 pic,
                 description,
                 bank,
@@ -109,19 +104,15 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
                 mosqueIdentity,
                 surfaceArea,
                 buildingArea,
+                kelId,
                 los,
                 since,
-                bankId,
                 rek,
                 address,
                 latitude,
                 longitude,
-                provinceId,
                 estimate,
                 estimateDate,
-                cityId,
-                kecId,
-                kelId,
                 pic,
                 description,
                 bank,
@@ -140,19 +131,15 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
             mosqueIdentity: String,
             surfaceArea: String,
             buildingArea: String,
+            kelId: String,
             los: String,
             since: String,
-            bankId: String,
             rek: String,
             address: String,
             latitude: String,
             longitude: String,
-            provinceId: String,
             estimate: String,
             estimateDate: String,
-            cityId: String,
-            kecId: String,
-            kelId: String,
             pic: String,
             description: String,
             bank: Bank,
@@ -186,7 +173,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
                 if (charString.isEmpty()) {
                     masjidListFilter = masjid
                 } else {
-                    val filteredList: MutableList<DataMasjid> = ArrayList()
+                    val filteredList: MutableList<MasjidModel> = ArrayList()
 //                    println("DATA ${listOf(filteredList)}")
                     for (row in masjid) {
                         if (row.mosqueName.toLowerCase().contains(charString.toLowerCase())) {
@@ -203,7 +190,7 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adap
             }
 
             override fun publishResults(constraint: CharSequence, results: FilterResults) {
-                masjidListFilter = results.values as ArrayList<DataMasjid>
+                masjidListFilter = results.values as ArrayList<MasjidModel>
                 notifyDataSetChanged()
             }
         }
