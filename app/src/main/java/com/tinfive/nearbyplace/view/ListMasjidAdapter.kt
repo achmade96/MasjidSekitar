@@ -166,6 +166,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
         }
     }
 
+    //GET FILTER FOR SEARCH OPTIONS
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults {
