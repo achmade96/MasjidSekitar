@@ -9,11 +9,11 @@ import android.os.Looper
 import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -32,20 +32,21 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.SortActivity
 import com.tinfive.nearbyplace.model.DataMasjid
+import com.tinfive.nearbyplace.model.Fasilitas
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
 import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
-import com.tinfive.nearbyplace.utils.setMargins
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.bottom_sheet.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
-    lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
+    var fasilitasList: MutableList<Fasilitas> = mutableListOf()
+    lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     //MAPS
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
@@ -59,8 +60,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
 
+    //List Masjid
     lateinit var viewModel: ListViewModel
     private val masjidAdapter = ListMasjidAdapter(ArrayList())
+    private val facilitiesAdapter = MultipleChooseAdapter(ArrayList())
+
 
     private var searchView: SearchView? = null
     private var myCompositeDisposable = CompositeDisposable()
@@ -71,25 +75,22 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
-        viewModel.refresh()
+        mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
+        viewModel.loadFasilitas()
 
-        initBottom()
+
+//        initBottom()
 
         nav.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.btn_sort -> {
-                    supportFragmentManager
-                        .beginTransaction()
-                    val intent = Intent(this@MainActivity, SortActivity::class.java)
-                    startActivity(intent)
+//                    slideUpDownBottomSheet()
                 }
                 R.id.btn_filter -> {
-                    slideUpDownBottomSheet()
+                    showBottomSheetDialogFragment()
                 }
             }
-
             true
         }
 
@@ -118,65 +119,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             accessMapLiveLocation()
         }
-
         observeViewMapsModel()
-
-    }
-
-    private fun initBottom() {
-        tv_car.setOnClickListener {
-            Toast.makeText(this,"Parkir Mobil",Toast.LENGTH_SHORT).show()
-        }
-        tv_motor.setOnClickListener {
-            Toast.makeText(this,"Parkir Motor",Toast.LENGTH_SHORT).show()
-        }
-        tv_wifi.setOnClickListener {
-            Toast.makeText(this,"Free Wifi",Toast.LENGTH_SHORT).show()
-        }
-        tv_ac.setOnClickListener {
-            Toast.makeText(this,"Air Conditioner",Toast.LENGTH_SHORT).show()
-        }
-        bottomSheetBehavior = BottomSheetBehavior.from<ConstraintLayout>(bottomSheet)
-        bottomSheetBehavior.setBottomSheetCallback(object :
-            BottomSheetBehavior.BottomSheetCallback() {
-            override fun onSlide(p0: View, p1: Float) {
-            }
-            override fun onStateChanged(p0: View, p1: Int) {
-                when (p1) {
-                    BottomSheetBehavior.STATE_COLLAPSED -> {
-                    }
-                    BottomSheetBehavior.STATE_HIDDEN -> {
-                    }
-                    BottomSheetBehavior.STATE_EXPANDED -> {
-                    }
-                    BottomSheetBehavior.STATE_DRAGGING -> {
-                        changeToDown()
-                    }
-                    BottomSheetBehavior.STATE_SETTLING -> {
-                    }
-
-                }
-            }
-
-        })
-    }
-
-    private fun slideUpDownBottomSheet() {
-        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-            changeToTop()
-        } else {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            changeToDown()
-        }
-    }
-
-    private fun changeToDown() {
-        setMargins(nav, 5, 0, 5, 20)
-    }
-
-    private fun changeToTop() {
-        setMargins(nav, 5, 0, 5, 700)
     }
 
     private fun checkLocationPermission(): Boolean {
@@ -265,7 +208,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun initializeComponent() {
-        viewModel = ViewModelProvider(this).get(ListViewModel::class.java)
         viewModel.refresh()
 
         recycler_masjids.apply {
@@ -278,6 +220,17 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
             adapter = masjidAdapter
         }
+
+        /*recycle_filter.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(
+                EqualSpacingItemDecoration(
+                    12,
+                    EqualSpacingItemDecoration.HORIZONTAL
+                )
+            )
+            adapter = facilitiesAdapter
+        }*/
     }
 
     private fun accessMapLiveLocation() {
@@ -440,6 +393,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         })
+        viewModel.fasilitasData.observe(this, Observer { fasilitas ->
+            fasilitas?.let{
+                fasilitasList.addAll(it)
+
+
+
+            }
+        })
     }
 
     private fun setOnClickItem(mosqueName: String) {
@@ -448,7 +409,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         startActivity(intent)
     }
 
-    //SEARCH OPTION
+    //SEARCH OPTIONS
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_toolbar, menu)
@@ -483,6 +444,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 //                println("DATA ACTIVITY $query")
                 return false
             }
+
             override fun onQueryTextSubmit(result: String): Boolean {
                 masjidAdapter.filter.filter(result)
                 return false
@@ -502,8 +464,35 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         params.height = ViewGroup.LayoutParams.MATCH_PARENT
         recycler_masjids.layoutParams = params
     }
-    //END SEARCH OPTION
+    //END SEARCH OPTIONS
 
+    //BOTTOM SHEET OPTIONS
+    private fun showBottomSheetDialogFragment() {
+        val bottomSheetFragment = FasilitasFragment.newInstance(fasilitasList)
+        bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
+       println("DATA SIZEE ${fasilitasList.size}")
+
+    }
+
+    /*private fun slideUpDownBottomSheet() {
+        if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+//            changeToTop()
+        } else {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            changeToDown()
+        }
+    }*/
+
+    /*private fun changeToDown() {
+        setMargins(nav, 5, 0, 5, 20)
+    }
+
+    private fun changeToTop() {
+        setMargins(nav, 5, 0, 5, 900)
+    }*/
+
+    //END BOTTOM SHEET OPTIONS
 
     //Add back button
     override fun onBackPressed() {

@@ -29,8 +29,8 @@ fun ImageView.loadImage(url: String?, progressDrawable: CircularProgressDrawable
 }
 
 fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
-    if (view.getLayoutParams() is MarginLayoutParams) {
-        val p = view.getLayoutParams() as MarginLayoutParams
+    if (view.layoutParams is MarginLayoutParams) {
+        val p = view.layoutParams as MarginLayoutParams
         p.setMargins(left, top, right, bottom)
         view.requestLayout()
     }

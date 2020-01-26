@@ -15,9 +15,8 @@ import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
 
-@Suppress("NAME_SHADOWING", "UNCHECKED_CAST")
-class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
-    RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
+
+class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) : RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
 
     private var context: Context? = null
     private var masjidListFilter: MutableList<DataMasjid>
@@ -36,7 +35,6 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
         context = parent.context
         val layoutInflate = LayoutInflater.from(context).inflate(R.layout.row, parent, false)
         return MasjidViewHolder(layoutInflate)
-
     }
 
     override fun getItemCount(): Int = masjidListFilter.size
@@ -188,19 +186,16 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
                 if (charString.isEmpty()) {
                     masjidListFilter = masjid
                 } else {
-
                     val filteredList: MutableList<DataMasjid> = ArrayList()
 //                    println("DATA ${listOf(filteredList)}")
                     for (row in masjid) {
                         if (row.mosqueName.toLowerCase().contains(charString.toLowerCase())) {
-
                             filteredList.add(row)
                         }
                     }
                     masjidListFilter = filteredList
                 }
                 val filterResults = FilterResults()
-
 
                 filterResults.values = masjidListFilter
 //                println("DATA ADAPTER ${filterResults}")
@@ -211,7 +206,6 @@ class ListMasjidAdapter(var masjid: MutableList<DataMasjid>) :
                 masjidListFilter = results.values as ArrayList<DataMasjid>
                 notifyDataSetChanged()
             }
-
         }
     }
 

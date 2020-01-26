@@ -3,9 +3,11 @@ package com.tinfive.nearbyplace.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class Province (
-
+data class MosqueFacilities (
+    @SerializedName("id")
+    @Expose
+    val id : Int,
     @SerializedName("name")
     @Expose
-    val provinceName: String
+    val name : String
 )

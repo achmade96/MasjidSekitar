@@ -26,15 +26,14 @@ data class DataMasjid(
     @SerializedName("building_area")
     @Expose
     val buildingArea: String,
+    @Expose
+    val kelId: String,
     @SerializedName("los")
     @Expose
     val los: String,
     @SerializedName("since")
     @Expose
     val since: String,
-    @SerializedName("bank_id")
-    @Expose
-    val bankId: String,
     @SerializedName("rek")
     @Expose
     val rek: String,
@@ -47,24 +46,12 @@ data class DataMasjid(
     @SerializedName("longitude")
     @Expose
     val longitude: String,
-    @SerializedName("province_id")
-    @Expose
-    val provinceId: String,
     @SerializedName("estimate")
     @Expose
     val estimate: String,
     @SerializedName("estimate_date")
     @Expose
     val estimateDate: String,
-    @SerializedName("city_id")
-    @Expose
-    val cityId: String,
-    @SerializedName("kec_id")
-    @Expose
-    val kecId: String,
-    @SerializedName("kel_id")
-    @Expose
-    val kelId: String,
     @SerializedName("pic")
     @Expose
     val pic: String,

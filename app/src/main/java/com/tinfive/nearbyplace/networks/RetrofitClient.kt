@@ -31,4 +31,13 @@ object RetrofitClient {
         .client(ApiWorker.client)
         .build()
         .create(MasjidApi::class.java)
+
+    //get fasilitas list
+    fun getFacilitiesList() =  Retrofit.Builder()
+        .baseUrl(BASE_URL_MASJID)
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .client(ApiWorker.client)
+        .build()
+        .create(MasjidApi::class.java)
 }
