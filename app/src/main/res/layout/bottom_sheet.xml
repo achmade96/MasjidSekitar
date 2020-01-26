@@ -21,4 +21,10 @@
         android:gravity="center_vertical"
         android:drawablePadding="16dp"
         android:textSize="16sp"/>
+
+    <Button
+        android:id="@+id/btn_filter_fasilitas"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="FILTER"/>
 </LinearLayout>

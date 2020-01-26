@@ -42,6 +42,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+    private var itung: Int = 0
     var fasilitasList: MutableList<Fasilitas> = mutableListOf()
     //MAPS
     private lateinit var mMap: GoogleMap
@@ -392,7 +393,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             fasilitas?.let {
                 fasilitasList.addAll(it)
 
-
             }
         })
     }
@@ -465,6 +465,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         val bottomSheetFragment = FasilitasFragment.newInstance(fasilitasList)
         bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
         println("DATA SIZEE ${fasilitasList.size}")
+        println("DATAITUNG $itung")
 
     }
 

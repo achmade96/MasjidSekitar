@@ -30,7 +30,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private var mAdapterFasilitas = MultipleChooseAdapter(ArrayList())
+    private var mAdapterFasilitas = FasilitasAdapter(ArrayList())
     private lateinit var dialog: BottomSheetDialog
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
@@ -63,7 +63,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     }
 
     private fun initRecycle(mFasilitas: List<Fasilitas>) {
-        mAdapterFasilitas.updateFacility(mFasilitas)
+        mAdapterFasilitas.updateListFasilitas(mFasilitas)
         recycle_filter.adapter = mAdapterFasilitas
         recycle_filter.setHasFixedSize(true)
         recycle_filter.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)

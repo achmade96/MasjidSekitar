@@ -9,8 +9,8 @@ data class Fasilitas (
     var id: Int,
     @SerializedName("name")
     @Expose
-    var name: String,
-    @SerializedName("mosque")
+    var name: String
+/*    @SerializedName("mosque")
     @Expose
-    var mosque: MosqueFacilities
+    var mosque: MosqueFacilities*/
 )
