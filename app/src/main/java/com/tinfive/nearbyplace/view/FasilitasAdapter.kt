@@ -9,6 +9,7 @@ import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.model.Fasilitas
+import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.item_bottom_sheet.view.*
 
 
@@ -79,7 +80,6 @@ class FasilitasAdapter(var fasilitasList: MutableList<Fasilitas>) :
             name.let {
                 itemView.ckb_option.text = it
                 itemView.ckb_option.isChecked = itemStateArray.get(adapterPosition, false)
-
 
             }
             itemView.setOnClickListener(this)
