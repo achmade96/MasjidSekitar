@@ -1,22 +1,18 @@
-package com.tinfive.nearbyplace.view
+package com.tinfive.nearbyplace.adapter
 
 import android.content.Context
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CompoundButton
 import androidx.recyclerview.widget.RecyclerView
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.model.Fasilitas
-import kotlinx.android.synthetic.main.bottom_sheet.view.*
 import kotlinx.android.synthetic.main.item_bottom_sheet.view.*
 
-
 class FasilitasAdapter(var fasilitasList: MutableList<Fasilitas>) :
+
     RecyclerView.Adapter<FasilitasAdapter.FasilitasViewHolder>() {
-
-
     private val limit: Int = 4
     private var context: Context? = null
     var itemStateArray = SparseBooleanArray()
@@ -51,14 +47,13 @@ class FasilitasAdapter(var fasilitasList: MutableList<Fasilitas>) :
     inner class FasilitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         override fun onClick(v: View?) {
             if (!itemStateArray.get(adapterPosition, false)) {
-                itemView.ckb_option.isChecked = true;
+                itemView.ckb_option.isChecked = true
                 itemStateArray.put(adapterPosition, true)
-                println("DATAC ${itemView.ckb_option.isChecked}")
-            }
-            else  {
-                itemView.ckb_option.isChecked = false;
+//                println("DATAC ${itemView.ckb_option.isChecked}")
+            } else {
+                itemView.ckb_option.isChecked = false
                 itemStateArray.put(adapterPosition, false)
-                println("DATAC ${itemView.ckb_option.isChecked}")
+//                println("DATAC ${itemView.ckb_option.isChecked}")
             }
         }
 
@@ -84,12 +79,6 @@ class FasilitasAdapter(var fasilitasList: MutableList<Fasilitas>) :
             }
             itemView.setOnClickListener(this)
 
-
-
         }
-
-
     }
-
-
 }

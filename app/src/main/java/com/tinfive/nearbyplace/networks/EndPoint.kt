@@ -13,4 +13,6 @@ object EndPoint {
     const val MY_PERMISSION_CODE:Int = 1000
 
     const val MAPS_GOOGLE : String = "maps/api/place/nearbysearch/json?"
+
+    const val imageUrlPath : String = BASE_URL_MASJID + "uploads/"
 }

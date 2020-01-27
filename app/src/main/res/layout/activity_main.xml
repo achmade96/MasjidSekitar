@@ -54,6 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:gravity="center"
                 android:layout_margin="8dp"
                 android:padding="5dp"
                 android:text="An error occured while loading data" />
@@ -79,6 +80,6 @@
         app:layout_anchorGravity="bottom"
         app:menu="@menu/menu_filter" />
 
-    <include layout="@layout/bottom_sheet" />
+    <include layout="@layout/bottom_sheet_filter" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

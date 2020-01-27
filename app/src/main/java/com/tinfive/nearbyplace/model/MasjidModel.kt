@@ -8,18 +8,23 @@ data class MasjidModel(
     @SerializedName("id")
     @Expose
     val mosqueId: Int,
+
     @SerializedName("type")
     @Expose
     val mosqueType: String,
+
     @SerializedName("code")
     @Expose
     val mosqueCode: String,
+
     @SerializedName("name")
     @Expose
     val mosqueName: String,
+
     @SerializedName("identity")
     @Expose
     val mosqueIdentity: String,
+
     @SerializedName("surface_area")
     @Expose
     val surfaceArea: String,

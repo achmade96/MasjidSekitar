@@ -8,7 +8,7 @@
     <string name="you_are_offline">You are Offline</string>
     <string name="masjid_not_found">Masjid not found</string>
     <string name="title_activity_filter">Filter</string>
-    <string name="title_activity_sort">Sort</string>
+    <string name="title_activity_sort">Masjid Tersebut</string>
     <string name="intro_text">Swipe edge to exit the map.</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://yukamal.com:80/.well-known/assetlinks.json\" }]</string>
 

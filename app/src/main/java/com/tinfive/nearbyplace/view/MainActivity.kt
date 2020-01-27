@@ -28,7 +28,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.SortActivity
+import com.tinfive.nearbyplace.fragment.FasilitasFragment
+import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
 import com.tinfive.nearbyplace.model.Fasilitas
 import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
@@ -44,6 +45,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var itung: Int = 0
     var fasilitasList: MutableList<Fasilitas> = mutableListOf()
+    var sortList: MutableList<MasjidModel> = mutableListOf()
     //MAPS
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
@@ -59,7 +61,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     //List Masjid
     lateinit var viewModel: ListViewModel
-    private val masjidAdapter = ListMasjidAdapter(ArrayList())
+    private val masjidAdapter =
+        ListMasjidAdapter(ArrayList())
 
     //Search View
     private var searchView: SearchView? = null
@@ -81,7 +84,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         nav.setOnNavigationItemSelectedListener { p0 ->
             when (p0.itemId) {
                 R.id.btn_sort -> {
-//                    slideUpDownBottomSheet()
+                    println("SORT BELOM AKTIF")
                 }
                 R.id.btn_filter -> {
                     showBottomSheetDialogFragment()
@@ -108,7 +111,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         //=====================================================
 
         //Request runtime permission
-        if (Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkLocationPermission()) {
                 accessMapLiveLocation()
             }
@@ -117,6 +120,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         }
         observeViewMapsModel()
     }
+
 
     private fun checkLocationPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(
@@ -216,17 +220,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             )
             adapter = masjidAdapter
         }
-
-        /*recycle_filter.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            addItemDecoration(
-                EqualSpacingItemDecoration(
-                    12,
-                    EqualSpacingItemDecoration.HORIZONTAL
-                )
-            )
-            adapter = facilitiesAdapter
-        }*/
     }
 
     private fun accessMapLiveLocation() {
@@ -398,9 +391,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setOnClickItem(mosqueName: String) {
-        val intent = Intent(this, SortActivity::class.java)
-        intent.putExtra("key", mosqueName)
-        startActivity(intent)
+        println("PINDAH LIST MASJID BELOM AKTIF")
     }
 
     //SEARCH OPTIONS
@@ -415,15 +406,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         searchView.setOnSearchClickListener {
             if (map.isVisible == true) {
+                recycler_masjids.visibility = View.INVISIBLE
                 map.view?.visibility = View.GONE
                 changeLayoutView()
             } else {
+                recycler_masjids.visibility = View.GONE
                 map.view?.visibility = View.VISIBLE
             }
         }
 
         searchView.setOnCloseListener {
             if (map.isVisible == false) {
+                recycler_masjids.visibility = View.GONE
                 map.view?.visibility = View.VISIBLE
                 changeBackLayoutView()
             }
@@ -434,12 +428,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         searchView.queryHint = "Cari Masjid Sekitar"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(query: String): Boolean {
+                recycler_masjids.visibility = View.GONE
                 masjidAdapter.filter.filter(query)
 //                println("DATA ACTIVITY $query")
                 return false
             }
 
             override fun onQueryTextSubmit(result: String): Boolean {
+                recycler_masjids.visibility = View.VISIBLE
                 masjidAdapter.filter.filter(result)
                 return false
             }
@@ -469,6 +465,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    //INI UNTUK MENGAKTIFKAN EFEK UP BUTTON NAV
     /*private fun slideUpDownBottomSheet() {
         if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -500,6 +497,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onStop() {
         myCompositeDisposable.clear()
         super.onStop()
+    }
+
+    fun OnClickEventPassData(s: String) {
+        println("DATA From BottomSheet $s")
     }
 }
 

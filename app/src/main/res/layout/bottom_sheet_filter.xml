@@ -24,7 +24,12 @@
 
     <Button
         android:id="@+id/btn_filter_fasilitas"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:background="@drawable/button_background"
+        android:layout_gravity="center"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:text="FILTER"/>
 </LinearLayout>

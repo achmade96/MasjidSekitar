@@ -26,11 +26,6 @@
             android:resource="@string/asset_statements" />
 
         <activity
-            android:label="@string/title_activity_sort"
-            android:name=".SortActivity">
-        </activity>
-
-        <activity
             android:label="@string/title_activity_filter"
             android:name=".FilterActivity" />
 

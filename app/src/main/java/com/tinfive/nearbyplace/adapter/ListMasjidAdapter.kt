@@ -1,4 +1,4 @@
-package com.tinfive.nearbyplace.view
+package com.tinfive.nearbyplace.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.model.*
+import com.tinfive.nearbyplace.networks.EndPoint
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
@@ -149,17 +150,17 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
             village: String
         ) {
             val progressDrawable: CircularProgressDrawable = getProgressDrawable(itemView.context)
-
+            val imgTarget = EndPoint.imageUrlPath
 
             mosqueName.let {
                 itemView.titleTv.text = it
             }
             address.let {
                 itemView.descTv.text = it
-//                    String.format("%s, %s, %s, %s", it, province, regency, district)
+//                    String.format("%s, %s, %s", it, province.provinceName, regency.regencyName, district.districtName)
             }
             pic.let {
-                itemView.iconIv.loadImage(it, progressDrawable)
+                itemView.iconIv.loadImage(imgTarget + it, progressDrawable)
             }
 
             itemView.setOnClickListener(this)
@@ -196,6 +197,8 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
             }
         }
     }
+
+
 
 
 }

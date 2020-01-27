@@ -12,8 +12,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class ListViewModel : ViewModel() {
-//    private val masjidSrv = MasjidService()
-
     private val disposable = CompositeDisposable()
     val masjid = MutableLiveData<List<MasjidModel>>()
     val fasilitasData = MutableLiveData<List<Fasilitas>>()
@@ -36,13 +34,7 @@ class ListViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ facilitiesRespon ->
                     fasilitasData.value = facilitiesRespon
-                   /* val myHandler = Handler()
-                    myHandler.postDelayed(object : Runnable {
-                        override fun run() {
-
-                        }
-                    }, 3000)*/
-                    println("DATA FASILITIES ${facilitiesRespon.size}")
+//                    println("DATA FASILITIES ${facilitiesRespon.size}")
                 }, { err ->
                     //                println("DATA ${err.message}")
                 })
