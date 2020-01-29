@@ -26,14 +26,4 @@ data class Fasilitas(
     @Expose
     var mosque: MosqueFacilities
 
-    /*    @SerializedName("id")
-    @Expose
-    var id: Int,
-    @SerializedName("name")
-    @Expose
-    var name: String
-    @SerializedName("mosque")
-    @Expose
-    var mosque: MosqueFacilities*/
-
 )

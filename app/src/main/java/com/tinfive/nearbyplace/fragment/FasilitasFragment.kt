@@ -91,16 +91,6 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 //                dialog.dismiss()
             }
         })
-
-
-
-        /*mAdapterFasilitas.setOnItemClickListener(object : FasilitasAdapter.OnItemClickListener{
-            override fun onItemSelected(kategori: FasilitasString) {
-                setOnClickItem(kategori.name)
-                println("DATAAA ${kategori.name}")
-            }
-
-        })*/
     }
 
     private fun setPassData(name: String) : String{
