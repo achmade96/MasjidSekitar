@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.tinfive.nearbyplace.R
+import com.tinfive.nearbyplace.fragment.FasilitasFragment
 import com.tinfive.nearbyplace.model.FasilitasString
 import kotlinx.android.synthetic.main.item_bottom_sheet.view.*
 
@@ -47,6 +48,8 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
         mOnItemClickListener = listener
     }
 
+
+
     inner class FasilitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
@@ -72,8 +75,10 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
             itemView.ckb_option.tag = adapterPosition
             itemView.ckb_option.setOnClickListener {
                 val ckbox = itemView.ckb_option.tag as Int
-                println("Checkbox $name")
+                println("CHCECK BOX $name")
                 fasilitasList[ckbox].isSelected = !fasilitasList[ckbox].isSelected
+
+
             }
             itemView.setOnClickListener(this)
         }
