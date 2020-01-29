@@ -31,7 +31,6 @@ import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
 import com.tinfive.nearbyplace.fragment.FasilitasFragment
 import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.model.Masjid
-import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
@@ -40,7 +39,6 @@ import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.item_bottom_sheet.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -131,7 +129,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 )
             )
         }
-
     }
 
     private fun checkLocationPermission(): Boolean {

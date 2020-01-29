@@ -24,6 +24,6 @@ data class Fasilitas(
     var easyAccess: String,
     @SerializedName("mosque")
     @Expose
-    var mosque: MosqueFacilities
+    var mosque: Masjid
 
 )

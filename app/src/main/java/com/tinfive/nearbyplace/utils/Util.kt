@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -34,4 +35,8 @@ fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
         p.setMargins(left, top, right, bottom)
         view.requestLayout()
     }
+}
+
+fun showToast(context: Context , message: String, duration: Int = Toast.LENGTH_LONG) {
+    Toast.makeText(context, message, duration).show()
 }

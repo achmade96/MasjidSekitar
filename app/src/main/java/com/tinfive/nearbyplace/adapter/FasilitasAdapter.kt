@@ -1,11 +1,9 @@
 package com.tinfive.nearbyplace.adapter
 
 import android.content.Context
-import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.model.FasilitasString
@@ -21,8 +19,7 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FasilitasViewHolder {
         context = parent.context
-        val layoutInflate =
-            LayoutInflater.from(context).inflate(R.layout.item_bottom_sheet, parent, false)
+        val layoutInflate = LayoutInflater.from(context).inflate(R.layout.item_bottom_sheet, parent, false)
         return FasilitasViewHolder(layoutInflate)
     }
 
@@ -74,9 +71,9 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
 
             itemView.ckb_option.tag = adapterPosition
             itemView.ckb_option.setOnClickListener {
-                val pos = itemView.ckb_option.tag as Int
-                println("pos $name")
-                fasilitasList[pos].isSelected = !fasilitasList[pos].isSelected
+                val ckbox = itemView.ckb_option.tag as Int
+                println("Checkbox $name")
+                fasilitasList[ckbox].isSelected = !fasilitasList[ckbox].isSelected
             }
             itemView.setOnClickListener(this)
         }

@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -39,8 +40,9 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     private lateinit var dialog: BottomSheetDialog
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
+    var numbers: MutableList<FasilitasString> = ArrayList()
 
-    var kategoriName : String = ""
+    var kategoriName: String = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = BottomSheetDialog(requireActivity(), theme)
@@ -75,28 +77,37 @@ class FasilitasFragment : BottomSheetDialogFragment() {
         mAdapterFasilitas.updateListFasilitas(mFasilitas)
         recycle_filter.adapter = mAdapterFasilitas
         recycle_filter.setHasFixedSize(true)
-        recycle_filter.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recycle_filter.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
 
         println("CEK $mFasilitas")
 
-        mAdapterFasilitas.setOnItemClickListener(object : FasilitasAdapter.OnItemClickListener{
+        mAdapterFasilitas.setOnItemClickListener(object : FasilitasAdapter.OnItemClickListener {
             override fun onItemSelected(kategori: FasilitasString) {
                 setPassData(kategori.name)
             }
 
         })
-        btn_filter_fasilitas.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                mainActivity.OnClickEventPassData("CLICK FILTER BLA ")
-//                dialog.dismiss()
+
+        btn_filter_fasilitas!!.setOnClickListener {
+            val stringBuilder = StringBuilder()
+            for (number in numbers) {
+                if (number.isSelected) {
+                    if (stringBuilder.isNotEmpty())
+                        stringBuilder.append(", ")
+                    stringBuilder.append(number.name)
+                }
             }
-        })
+            Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
+            mainActivity.OnClickEventPassData("CLICK FILTER BLA $numbers")
+            //                dialog.dismiss()
+        }
     }
 
-    private fun setPassData(name: String) : String{
+
+    private fun setPassData(name: String): String {
         kategoriName = name
         return kategoriName
     }
-
 
 }

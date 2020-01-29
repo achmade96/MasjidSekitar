@@ -25,7 +25,7 @@
             android:layout_marginBottom="15dp"
             android:scaleType="fitXY"
             android:src="@color/colorAccent" />
-
+<!--
 
         <ImageView
             android:id="@+id/directions"
@@ -35,7 +35,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="15dp"
-            android:src="@drawable/ic_directions_black_24dp" />
+            android:src="@drawable/ic_directions_black_24dp" />-->
 
         <ImageView
             android:id="@+id/timing"
