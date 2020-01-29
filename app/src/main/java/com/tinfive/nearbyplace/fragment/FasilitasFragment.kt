@@ -14,21 +14,21 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.adapter.FasilitasAdapter
-import com.tinfive.nearbyplace.model.Fasilitas
+import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.view.MainActivity
 import kotlinx.android.synthetic.main.bottom_sheet_filter.*
-import kotlinx.android.synthetic.main.item_bottom_sheet.*
+
 
 class FasilitasFragment : BottomSheetDialogFragment() {
 
     companion object {
 
-        var mFasilitas: MutableList<Fasilitas> = mutableListOf()
+        var mFasilitas: MutableList<FasilitasString> = mutableListOf()
         fun newInstance(): FasilitasFragment {
             return FasilitasFragment()
         }
 
-        fun newInstance(listFasilitas: List<Fasilitas>): FasilitasFragment {
+        fun newInstance(listFasilitas: List<FasilitasString>): FasilitasFragment {
             mFasilitas = listFasilitas.toMutableList()
             return FasilitasFragment()
         }
@@ -40,6 +40,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
 
+    var kategoriName : String = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = BottomSheetDialog(requireActivity(), theme)
@@ -52,7 +53,6 @@ class FasilitasFragment : BottomSheetDialogFragment() {
                 behavior.isHideable = false
                 behavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
-
         })
         return dialog
     }
@@ -68,24 +68,45 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        println("Fragment ${mFasilitas.size}")
-
-        initRecycle(mFasilitas)
-
-        btn_filter_fasilitas.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                dialog.dismiss()
-                mainActivity.OnClickEventPassData("CLICK FILTER")
-            }
-        })
+        initRecycle(mFasilitas) //GET BUTTON FILTER
     }
 
-    private fun initRecycle(mFasilitas: List<Fasilitas>) {
+    private fun initRecycle(mFasilitas: List<FasilitasString>) {
         mAdapterFasilitas.updateListFasilitas(mFasilitas)
         recycle_filter.adapter = mAdapterFasilitas
         recycle_filter.setHasFixedSize(true)
-        recycle_filter.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+        recycle_filter.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
+
+        println("CEK $mFasilitas")
+
+        mAdapterFasilitas.setOnItemClickListener(object : FasilitasAdapter.OnItemClickListener{
+            override fun onItemSelected(kategori: FasilitasString) {
+                setPassData(kategori.name)
+            }
+
+        })
+        btn_filter_fasilitas.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                mainActivity.OnClickEventPassData("CLICK FILTER BLA ")
+//                dialog.dismiss()
+            }
+        })
+
+
+
+        /*mAdapterFasilitas.setOnItemClickListener(object : FasilitasAdapter.OnItemClickListener{
+            override fun onItemSelected(kategori: FasilitasString) {
+                setOnClickItem(kategori.name)
+                println("DATAAA ${kategori.name}")
+            }
+
+        })*/
     }
+
+    private fun setPassData(name: String) : String{
+        kategoriName = name
+        return kategoriName
+    }
+
+
 }

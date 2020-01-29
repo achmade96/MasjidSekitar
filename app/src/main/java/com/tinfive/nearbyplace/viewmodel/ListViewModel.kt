@@ -12,6 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class ListViewModel : ViewModel() {
+
     private val disposable = CompositeDisposable()
     val masjid = MutableLiveData<List<MasjidModel>>()
     val fasilitasData = MutableLiveData<List<Fasilitas>>()

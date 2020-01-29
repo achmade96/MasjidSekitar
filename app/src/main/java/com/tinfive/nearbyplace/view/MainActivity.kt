@@ -1,6 +1,5 @@
 package com.tinfive.nearbyplace.view
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -28,9 +27,9 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.fragment.FasilitasFragment
 import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
-import com.tinfive.nearbyplace.model.Fasilitas
+import com.tinfive.nearbyplace.fragment.FasilitasFragment
+import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
@@ -40,12 +39,12 @@ import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_bottom_sheet.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var itung: Int = 0
-    var fasilitasList: MutableList<Fasilitas> = mutableListOf()
-    var sortList: MutableList<MasjidModel> = mutableListOf()
+    var fasilitasList: MutableList<FasilitasString> = mutableListOf()
     //MAPS
     private lateinit var mMap: GoogleMap
     private lateinit var mLastLocation: Location
@@ -77,7 +76,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
         mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
         viewModel.loadFasilitas()
-
 
 //        initBottom()
 
@@ -119,8 +117,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             accessMapLiveLocation()
         }
         observeViewMapsModel()
+        initFilterData()
     }
 
+    private fun initFilterData() {
+        val onFasilitas = this.resources.getStringArray(R.array.fasilitas)
+
+        for(i in onFasilitas.indices) {
+            fasilitasList.add(
+                FasilitasString(
+                    i, onFasilitas[i]
+                )
+            )
+        }
+
+    }
 
     private fun checkLocationPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(
@@ -360,8 +371,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             masjid?.let {
                 recycler_masjids.visibility = View.VISIBLE
                 masjidAdapter.updateMasjid(it)
-                masjidAdapter.setOnItemClickListener(object :
-                    ListMasjidAdapter.OnItemClickListener {
+                masjidAdapter.setOnItemClickListener(object : ListMasjidAdapter.OnItemClickListener {
                     override fun onItemSelected(masjides: MasjidModel) {
                         setOnClickItem(masjides.mosqueName)
                     }
@@ -382,16 +392,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         })
-        viewModel.fasilitasData.observe(this, Observer { fasilitas ->
-            fasilitas?.let {
-                fasilitasList.addAll(it)
 
-            }
-        })
     }
 
     private fun setOnClickItem(mosqueName: String) {
-        println("PINDAH LIST MASJID BELOM AKTIF")
+        println("PINDAH MASJID BELOM AKTIF")
     }
 
     //SEARCH OPTIONS
@@ -499,8 +504,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onStop()
     }
 
-    fun OnClickEventPassData(s: String) {
-        println("DATA From BottomSheet $s")
+    fun OnClickEventPassData(name: String) {
+        println("DATA From BottomSheet $name")
     }
+
+
 }
 
