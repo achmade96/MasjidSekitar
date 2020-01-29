@@ -171,9 +171,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 for (i in 0 until masjidListMap.size) {
                     val markerOptions = MarkerOptions()
                     val googlePlace = masjidListMap.get(i)
-                    val lat = googlePlace.geometry!!.location!!.lat
-                    val lng = googlePlace.geometry!!.location!!.lng
-                    val placeName = googlePlace.name
+                    val lat = googlePlace.latitude.toDouble()
+                    val lng = googlePlace.longitude.toDouble()
+                    val placeName = googlePlace.mosqueName
                     val latLng = LatLng(lat, lng)
 
 //                    if (SphericalUtil.computeDistanceBetween(latLng, markerOptions.getPosition()) < 1000)

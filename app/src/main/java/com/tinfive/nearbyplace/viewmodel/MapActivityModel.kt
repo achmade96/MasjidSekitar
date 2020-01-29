@@ -3,8 +3,7 @@ package com.tinfive.nearbyplace.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.nearbyplaces.model.MyPlaces
-import com.example.nearbyplaces.model.Results
+import com.tinfive.nearbyplace.model.Masjid
 import com.tinfive.nearbyplace.networks.MasjidApi
 import com.tinfive.nearbyplace.networks.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,7 +11,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MapActivityModel(application: Application): BaseViewModel(application) {
-    val masjidsList = MutableLiveData<List<Results>>()
+    val masjidsList = MutableLiveData<List<Masjid>>()
     val masjidsListError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
@@ -24,18 +23,18 @@ class MapActivityModel(application: Application): BaseViewModel(application) {
         myCompositeDisposable.add(jsonApi.getMarkerPlace(url)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({myPlaces -> displayData(myPlaces)} ,
+            .subscribe({myPlaces -> displayData(myPlaces.data.data)} ,
                 { t: Throwable -> Log.e("RxError : ","RxError : " + t.message)
                     masjidsListError.value = true
                     loading.value = false
                 })
         )
     }
-    private fun displayData(myPlaces: MyPlaces){
+    private fun displayData(myPlaces: List<Masjid>){
 
-        if (myPlaces.status.equals("OK")){
-            val masjids: Array<Results>? = myPlaces.results
-            masjidsList.value = masjids!!.toList()
+        if (myPlaces.equals("OK")){
+            val masjids: List<Masjid> = myPlaces
+            masjidsList.value = masjids
             masjidsListError.value = false
             loading.value = false
             (masjids.toList())
