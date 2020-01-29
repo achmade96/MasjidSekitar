@@ -10,11 +10,12 @@ import com.tinfive.nearbyplace.networks.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import com.tinfive.nearbyplace.model.Masjid as mas
 
 class ListViewModel : ViewModel() {
 
     private val disposable = CompositeDisposable()
-    val masjid = MutableLiveData<List<MasjidModel>>()
+    val masjid = MutableLiveData<List<mas>>()
     val fasilitasData = MutableLiveData<List<Fasilitas>>()
     val masjidLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
@@ -27,6 +28,7 @@ class ListViewModel : ViewModel() {
         fetchFacilities()
     }
 
+    //GET LIST FASILITAS
     private fun fetchFacilities() {
         loading.value = true
         disposable.add(
@@ -42,6 +44,7 @@ class ListViewModel : ViewModel() {
         )
     }
 
+    //GET LIST VIEW MASJID
     private fun fetchMasjid() {
         loading.value = true
         disposable.add(
@@ -50,7 +53,7 @@ class ListViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ mosqueRespons ->
                     //                println("Mosque ${mosqueRespons}")
-                    masjid.value = mosqueRespons.data
+                    masjid.value = mosqueRespons.data.data
                     masjidLoadError.value = false
                     loading.value = false
                 }, { err ->

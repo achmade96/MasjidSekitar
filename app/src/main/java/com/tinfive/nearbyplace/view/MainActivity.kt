@@ -30,6 +30,7 @@ import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
 import com.tinfive.nearbyplace.fragment.FasilitasFragment
 import com.tinfive.nearbyplace.model.FasilitasString
+import com.tinfive.nearbyplace.model.Masjid
 import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
@@ -372,7 +373,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 recycler_masjids.visibility = View.VISIBLE
                 masjidAdapter.updateMasjid(it)
                 masjidAdapter.setOnItemClickListener(object : ListMasjidAdapter.OnItemClickListener {
-                    override fun onItemSelected(masjides: MasjidModel) {
+                    override fun onItemSelected(masjides: Masjid) {
                         setOnClickItem(masjides.mosqueName)
                     }
                 })
@@ -430,7 +431,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             false
         }
         searchView.maxWidth = Int.MAX_VALUE
-        searchView.queryHint = "Cari Masjid Sekitar"
+        searchView.queryHint = "Cari Masjid Yuk"
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(query: String): Boolean {
                 recycler_masjids.visibility = View.GONE

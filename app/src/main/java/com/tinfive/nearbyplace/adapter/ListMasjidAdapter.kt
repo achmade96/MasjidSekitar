@@ -16,11 +16,11 @@ import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.row.view.*
 
 
-class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
+class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
     RecyclerView.Adapter<ListMasjidAdapter.MasjidViewHolder>(), Filterable {
 
     private var context: Context? = null
-    private var masjidListFilter: MutableList<MasjidModel>
+    private var masjidListFilter: MutableList<Masjid>
 
     init {
         masjidListFilter = masjid
@@ -29,7 +29,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
     private var mOnItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun onItemSelected(masjides: MasjidModel)
+        fun onItemSelected(masjides: Masjid)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MasjidViewHolder {
@@ -46,7 +46,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
         holder.bind(position)
     }
 
-    fun updateMasjid(masjidApiUpdate: List<MasjidModel>) {
+    fun updateMasjid(masjidApiUpdate: List<Masjid>) {
         this.masjid.clear()
         this.masjid.addAll(masjidApiUpdate)
         notifyDataSetChanged()
@@ -167,7 +167,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
         }
     }
 
-    //GET FILTER FOR SEARCH OPTIONS
+    //GET MAsJID FOR SEARCH OPTIONS
     override fun getFilter(): Filter {
         return object : Filter() {
             override fun performFiltering(charSequence: CharSequence): FilterResults {
@@ -175,7 +175,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
                 if (charString.isEmpty()) {
                     masjidListFilter = masjid
                 } else {
-                    val filteredList: MutableList<MasjidModel> = ArrayList()
+                    val filteredList: MutableList<Masjid> = ArrayList()
 //                    println("DATA ${listOf(filteredList)}")
                     for (row in masjid) {
                         if (row.mosqueName.toLowerCase().contains(charString.toLowerCase())) {
@@ -192,7 +192,7 @@ class ListMasjidAdapter(var masjid: MutableList<MasjidModel>) :
             }
 
             override fun publishResults(constraint: CharSequence, results: FilterResults) {
-                masjidListFilter = results.values as ArrayList<MasjidModel>
+                masjidListFilter = results.values as ArrayList<Masjid>
                 notifyDataSetChanged()
             }
         }
