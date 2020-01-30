@@ -10,10 +10,8 @@ import retrofit2.http.*
 
 interface MasjidApi {
 
-    /*@GET
-    fun getMarkerPlace(@Url url: String): Observable<MyPlaces>*/
     @GET
-    fun getMarkerPlace(@Url url: String): Observable<ApiRespons.MosqueRespon>
+    fun getMarkerPlace(@Url url: String): Observable<MyPlaces>
 
     @GET(Masjid)
     fun getMosque(): Observable<ApiRespons.MosqueRespon>

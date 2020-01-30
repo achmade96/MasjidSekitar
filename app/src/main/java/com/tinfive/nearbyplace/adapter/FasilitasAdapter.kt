@@ -64,7 +64,6 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
 
         private fun inflateData(id: Int, name: String, isSelected: Boolean) {
 
-
             itemView.ckb_option.text = name
             itemView.ckb_option.isChecked = fasilitasList[adapterPosition].isSelected
             itemView.ckb_option.text = fasilitasList[adapterPosition].name

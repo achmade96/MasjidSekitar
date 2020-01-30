@@ -171,9 +171,9 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 for (i in 0 until masjidListMap.size) {
                     val markerOptions = MarkerOptions()
                     val googlePlace = masjidListMap.get(i)
-                    val lat = googlePlace.latitude.toDouble()
-                    val lng = googlePlace.longitude.toDouble()
-                    val placeName = googlePlace.mosqueName
+                    val lat = googlePlace.geometry!!.location!!.lat
+                    val lng = googlePlace.geometry!!.location!!.lng
+                    val placeName = googlePlace.name
                     val latLng = LatLng(lat, lng)
 
 //                    if (SphericalUtil.computeDistanceBetween(latLng, markerOptions.getPosition()) < 1000)
@@ -503,7 +503,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun OnClickEventPassData(name: String) {
-        println("DATA From BottomSheet $name")
+        println("DATA From BottomSheet to main $name")
     }
 
 

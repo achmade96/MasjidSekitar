@@ -15,8 +15,11 @@ class MapsUtils {
         }
 
         fun getUrl(latitude: Double, longitude: Double): String {
-            val googlePlaceUrl = StringBuilder("rest/public/mosques")
-
+            val googlePlaceUrl = StringBuilder("maps/api/place/nearbysearch/json")
+                .append("?location=$latitude,$longitude")
+                .append("&radius=1000")
+                .append("&type=mosque")
+                .append("&key=AIzaSyBHRZoFAHUe_dkkhrclrS5FyH3jAsFgCAk")
 
             return googlePlaceUrl.toString()
         }

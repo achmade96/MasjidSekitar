@@ -40,7 +40,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     private lateinit var dialog: BottomSheetDialog
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
-    var numbers: MutableList<FasilitasString> = ArrayList()
+    var checkedFasilitas: MutableList<FasilitasString> = ArrayList()
 
     var kategoriName: String = ""
 
@@ -89,18 +89,18 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
         })
 
-        btn_filter_fasilitas!!.setOnClickListener {
+        btn_filter_fasilitas.setOnClickListener {
             val stringBuilder = StringBuilder()
-            for (number in numbers) {
-                if (number.isSelected) {
-                    if (stringBuilder.isNotEmpty())
-                        stringBuilder.append(", ")
-                    stringBuilder.append(number.name)
+            for (checkedFasilitas in mFasilitas) {
+                if (checkedFasilitas.isSelected) {
+                    if (stringBuilder.isNotEmpty()) stringBuilder.append(", ")
+                    stringBuilder.append(checkedFasilitas.name)
                 }
             }
+            println ("DATA BOTTOM SHHEET $stringBuilder")
             Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
-            mainActivity.OnClickEventPassData("CLICK FILTER BLA $numbers")
-            //                dialog.dismiss()
+            mainActivity.OnClickEventPassData("CLICK FILTER BLA $stringBuilder")
+            dialog.dismiss()
         }
     }
 
