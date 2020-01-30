@@ -91,6 +91,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
         })
 
+        //GET BUTTON FILTER
         btn_filter_fasilitas.setOnClickListener {
             println ("DATA BOTTOM SHHEET $kategoriName")
             val stringBuilder = StringBuilder()
@@ -102,19 +103,6 @@ class FasilitasFragment : BottomSheetDialogFragment() {
             }
             println ("DATA BOTTOM SHHEET $stringBuilder")
         }
-
-        /*  btn_filter_fasilitas!!.setOnClickListener {
-              val stringBuilder = StringBuilder()
-              for (number in numbers) {
-                  if (number.isSelected) {
-                      if (stringBuilder.isNotEmpty())
-                          stringBuilder.append(", ")
-                      stringBuilder.append(number.name)
-                  }
-              }
-              Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
-
-          }*/
     }
 
 
