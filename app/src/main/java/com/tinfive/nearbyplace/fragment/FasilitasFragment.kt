@@ -93,7 +93,6 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
         //GET BUTTON FILTER
         btn_filter_fasilitas.setOnClickListener {
-            println ("DATA BOTTOM SHHEET $kategoriName")
             val stringBuilder = StringBuilder()
             for (checkedFasilitas in mFasilitas) {
                 if (checkedFasilitas.isSelected) {
