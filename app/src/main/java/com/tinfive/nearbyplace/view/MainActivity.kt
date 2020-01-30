@@ -119,18 +119,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         initFilterData()
     }
 
-    private fun initFilterData() {
-        val onFasilitas = this.resources.getStringArray(R.array.fasilitas)
-
-        for(i in onFasilitas.indices) {
-            fasilitasList.add(
-                FasilitasString(
-                    i, onFasilitas[i]
-                )
-            )
-        }
-    }
-
     private fun checkLocationPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(
                 this,
@@ -502,8 +490,21 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onStop()
     }
 
+    //GET VALUE CHECKBOX FROM FASILITAS
     fun OnClickEventPassData(name: String) {
         println("DATA From BottomSheet to main $name")
+    }
+
+    private fun initFilterData() {
+        val onFasilitas = this.resources.getStringArray(R.array.fasilitas)
+
+        for(i in onFasilitas.indices) {
+            fasilitasList.add(
+                FasilitasString(
+                    i, onFasilitas[i]
+                )
+            )
+        }
     }
 
 

@@ -44,7 +44,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     lateinit var fragmentView: View
     var checkedFasilitas: MutableList<FasilitasString> = ArrayList()
 
-    var kategoriName: String = ""
+    var kategoriName: String = "1"
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = BottomSheetDialog(requireActivity(), theme)
@@ -93,14 +93,17 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
         //GET BUTTON FILTER
         btn_filter_fasilitas.setOnClickListener {
+            println ("DATA BOTTOM HAHA $kategoriName")
             val stringBuilder = StringBuilder()
             for (checkedFasilitas in mFasilitas) {
-                if (checkedFasilitas.isSelected) {
+                if (checkedFasilitas.isSelected ) {
                     if (stringBuilder.isNotEmpty()) stringBuilder.append(", ")
                     stringBuilder.append(checkedFasilitas.name)
                 }
             }
-            println ("DATA BOTTOM SHHEET $stringBuilder")
+            Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
+            mainActivity.OnClickEventPassData("CLICK FILTER BLA $stringBuilder")
+            dialog.dismiss()
         }
     }
 
