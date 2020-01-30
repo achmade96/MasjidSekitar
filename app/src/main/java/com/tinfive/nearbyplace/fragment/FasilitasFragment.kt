@@ -33,6 +33,8 @@ class FasilitasFragment : BottomSheetDialogFragment() {
             mFasilitas = listFasilitas.toMutableList()
             return FasilitasFragment()
         }
+
+
     }
 
     private val mainActivity: MainActivity = MainActivity()
@@ -90,6 +92,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
         })
 
         btn_filter_fasilitas.setOnClickListener {
+            println ("DATA BOTTOM SHHEET $kategoriName")
             val stringBuilder = StringBuilder()
             for (checkedFasilitas in mFasilitas) {
                 if (checkedFasilitas.isSelected) {
@@ -98,10 +101,20 @@ class FasilitasFragment : BottomSheetDialogFragment() {
                 }
             }
             println ("DATA BOTTOM SHHEET $stringBuilder")
-            Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
-            mainActivity.OnClickEventPassData("CLICK FILTER BLA $stringBuilder")
-            dialog.dismiss()
         }
+
+        /*  btn_filter_fasilitas!!.setOnClickListener {
+              val stringBuilder = StringBuilder()
+              for (number in numbers) {
+                  if (number.isSelected) {
+                      if (stringBuilder.isNotEmpty())
+                          stringBuilder.append(", ")
+                      stringBuilder.append(number.name)
+                  }
+              }
+              Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
+
+          }*/
     }
 
 
