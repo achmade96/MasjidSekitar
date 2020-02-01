@@ -18,4 +18,13 @@ interface MasjidApi {
 
     @GET(Fasilitas)
     fun getFilteredMasjid() : Observable<List<Fasilitas>>
+
+    @POST("rest/public/mosque_facilities")
+    @FormUrlEncoded
+    fun filterSubmit(@Query (value = "full_time") full_time: String,
+                     @Query (value = "ac") ac: String,
+                     @Query (value = "free_water") free_water: String,
+                     @Query (value = "easy_access") easy_access: String) : Observable<ApiRespons.FilterRespons>
+
+
 }

@@ -13,6 +13,9 @@ import com.tinfive.nearbyplace.model.*
 import com.tinfive.nearbyplace.networks.EndPoint
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
+import com.tinfive.nearbyplace.view.MainActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.row.view.*
 
 
@@ -197,6 +200,8 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
             }
         }
     }
+
+
 
 
 

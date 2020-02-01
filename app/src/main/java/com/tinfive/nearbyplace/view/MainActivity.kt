@@ -1,5 +1,6 @@
 package com.tinfive.nearbyplace.view
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
@@ -35,6 +36,7 @@ import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
 import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
+import com.tinfive.nearbyplace.utils.showToast
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
@@ -42,7 +44,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
+    private var valueSelected : Int = 0
     private var itung: Int = 0
+    lateinit var fasilitasModel: FasilitasFragment
+
     var fasilitasList: MutableList<FasilitasString> = mutableListOf()
     //MAPS
     private lateinit var mMap: GoogleMap
@@ -75,6 +80,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         viewModel = ViewModelProvider(this)[ListViewModel::class.java]
         mapsModel = ViewModelProvider(this).get(MapActivityModel::class.java)
         viewModel.loadFasilitas()
+
 
 //        initBottom()
 
@@ -153,18 +159,18 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mapsModel.masjidsList.observe(this, Observer { masjidListMap ->
             masjidListMap?.let {
-                recycler_masjids.visibility = View.VISIBLE
+                println("markerl $masjidListMap")
+//                recycler_masjids.visibility = View.VISIBLE
 
 
-                for (i in 0 until masjidListMap.size) {
+                for (element in masjidListMap) {
                     val markerOptions = MarkerOptions()
-                    val googlePlace = masjidListMap.get(i)
-                    val lat = googlePlace.geometry!!.location!!.lat
-                    val lng = googlePlace.geometry!!.location!!.lng
-                    val placeName = googlePlace.name
+                    val googlePlace = element
+                    val lat = googlePlace.latitude.toDouble()
+                    val lng = googlePlace.longitude.toDouble()
+                    val placeName = googlePlace.mosqueName
                     val latLng = LatLng(lat, lng)
-
-//                    if (SphericalUtil.computeDistanceBetween(latLng, markerOptions.getPosition()) < 1000)
+                    println("markern $placeName")
 
                     markerOptions.position(latLng)
                     markerOptions.title(placeName)
@@ -178,7 +184,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 12f))
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16f))
 
-                if (masjidListMap.size <= 0) {
+                if (masjidListMap.isEmpty()) {
                     listError.text = getString(R.string.masjid_not_found)
                     listError.visibility = View.VISIBLE
                     loadingView.visibility = View.GONE
@@ -265,6 +271,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.animateCamera(cu)
 
                 val url = getUrl(latitude, longitude)
+                println("markerr ${getUrl(latitude, longitude)}")
 
                 if (MapsUtils.isOnline(this@MainActivity)) {
                     mapsModel.fetchData(url)
@@ -382,7 +389,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun setOnClickItem(mosqueName: String) {
-        println("PINDAH MASJID BELOM AKTIF")
+        startActivity(Intent(this, InformasiMasjid::class.java))
     }
 
     //SEARCH OPTIONS
@@ -490,9 +497,23 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onStop()
     }
 
-    //GET VALUE CHECKBOX FROM FASILITAS
-    fun OnClickEventPassData(name: String) {
+    //GET VALUE CHECKBOX FROM FASILITAS FRAGMENT
+    fun onClickEventPassData(name: String) {
+        submitFilterData()
+
+
         println("DATA From BottomSheet to main $name")
+
+
+    }
+
+    private fun submitFilterData() {
+        if (valueSelected == 0){
+
+        } else {
+            viewModel.submitFilter(1,1,1,1)
+            println("TES MODEL ${submitFilterData()}")
+        }
     }
 
     private fun initFilterData() {

@@ -24,18 +24,15 @@ class ApiRespons {
 
     )
 
-    data class FilterRespon(
-
+    data class FilterRespons(
+        @SerializedName("success")
+        @Expose
+        val success: Boolean,
         @SerializedName("message")
         @Expose
         val message: String,
-        @SerializedName("data")
-        @Expose
-        val data: Masjid,
         @SerializedName("code")
         @Expose
         val code: Int
-
-
     )
 }

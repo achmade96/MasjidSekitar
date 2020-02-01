@@ -18,6 +18,7 @@ import com.tinfive.nearbyplace.adapter.FasilitasAdapter
 import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.view.MainActivity
 import kotlinx.android.synthetic.main.bottom_sheet_filter.*
+import kotlinx.android.synthetic.main.item_bottom_sheet.*
 
 
 class FasilitasFragment : BottomSheetDialogFragment() {
@@ -43,8 +44,10 @@ class FasilitasFragment : BottomSheetDialogFragment() {
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
     var checkedFasilitas: MutableList<FasilitasString> = ArrayList()
+    var valueSelected = 0
 
-    var kategoriName: String = "1"
+
+    var kategoriName: String = ""
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         dialog = BottomSheetDialog(requireActivity(), theme)
@@ -93,16 +96,18 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
         //GET BUTTON FILTER
         btn_filter_fasilitas.setOnClickListener {
-            println ("DATA BOTTOM HAHA $kategoriName")
+//            println ("DATA BOTTOM HAHA $kategoriName")
             val stringBuilder = StringBuilder()
             for (checkedFasilitas in mFasilitas) {
-                if (checkedFasilitas.isSelected ) {
+                if (checkedFasilitas.isSelected )  {
                     if (stringBuilder.isNotEmpty()) stringBuilder.append(", ")
+
                     stringBuilder.append(checkedFasilitas.name)
+
                 }
             }
             Toast.makeText(context, stringBuilder.toString(), Toast.LENGTH_LONG).show()
-            mainActivity.OnClickEventPassData("CLICK FILTER BLA $stringBuilder")
+            mainActivity.onClickEventPassData("CLICK FILTER BLA ${stringBuilder}")
             dialog.dismiss()
         }
     }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.fragment.FasilitasFragment
@@ -74,6 +75,9 @@ class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : Recycl
             itemView.ckb_option.tag = adapterPosition
             itemView.ckb_option.setOnClickListener {
                 val ckbox = itemView.ckb_option.tag as Int
+                Toast.makeText(context, fasilitasList[ckbox].name + " clicked!", Toast.LENGTH_SHORT).show()
+
+
                 println("CHCECK BOX $name")
                 fasilitasList[ckbox].isSelected = !fasilitasList[ckbox].isSelected
 

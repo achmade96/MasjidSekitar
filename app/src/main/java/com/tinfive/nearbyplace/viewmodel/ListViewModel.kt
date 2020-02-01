@@ -1,10 +1,8 @@
 package com.tinfive.nearbyplace.viewmodel
 
-import android.os.Handler
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tinfive.nearbyplace.model.Fasilitas
-import com.tinfive.nearbyplace.model.MasjidModel
 import com.tinfive.nearbyplace.model.respons.ApiRespons
 import com.tinfive.nearbyplace.networks.RetrofitClient
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,6 +17,7 @@ class ListViewModel : ViewModel() {
     val fasilitasData = MutableLiveData<List<Fasilitas>>()
     val masjidLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
+    val successSubmit = MutableLiveData<ApiRespons.FilterRespons>()
 
     fun refresh() {
         fetchMasjid()
@@ -61,6 +60,25 @@ class ListViewModel : ViewModel() {
                     loading.value = false
                 })
         )
+    }
+
+    //get Filter Data
+    fun submitFilter(full_time: String, ac: String, free_water: String, easy_access: String) {
+        loading.value = true
+        disposable.add(RetrofitClient.getPostFilter().filterSubmit(full_time, ac, free_water, easy_access)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ filterRespons ->
+                println("SUBMIT RESP ${filterRespons}")
+
+                successSubmit.value = filterRespons
+                masjidLoadError.value = false
+                loading.value = false
+            },{ err->
+                masjidLoadError.value = true
+                loading.value = false
+            }))
+
     }
 
     override fun onCleared() {

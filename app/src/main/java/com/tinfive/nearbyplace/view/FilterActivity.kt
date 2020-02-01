@@ -1,7 +1,8 @@
-package com.tinfive.nearbyplace
+package com.tinfive.nearbyplace.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.networks.MasjidApi
 import io.reactivex.disposables.CompositeDisposable
 
