@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".view.InformasiMasjid"></activity>
+        <activity android:name=".view.DetailMasjid"></activity>
 
         <meta-data
             android:name="asset_statements"

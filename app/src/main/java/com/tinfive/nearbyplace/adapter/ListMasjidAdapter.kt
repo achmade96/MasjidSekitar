@@ -13,10 +13,7 @@ import com.tinfive.nearbyplace.model.*
 import com.tinfive.nearbyplace.networks.EndPoint
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
-import com.tinfive.nearbyplace.view.MainActivity
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.row.view.*
+import kotlinx.android.synthetic.main.cardview_masjidsekitar.view.*
 
 
 class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
@@ -37,7 +34,7 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MasjidViewHolder {
         context = parent.context
-        val layoutInflate = LayoutInflater.from(context).inflate(R.layout.row, parent, false)
+        val layoutInflate = LayoutInflater.from(context).inflate(R.layout.cardview_masjidsekitar, parent, false)
         return MasjidViewHolder(layoutInflate)
     }
 
@@ -71,6 +68,7 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
         fun clear() {
             itemView.titleTv.text = ""
             itemView.descTv.text = ""
+            itemView.descTiming.text = "otw"
             itemView.iconIv.setImageDrawable(null)
         }
 
@@ -166,7 +164,7 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
                 itemView.iconIv.loadImage(imgTarget + it, progressDrawable)
             }
 
-            itemView.setOnClickListener(this)
+            itemView.setOnClickListener (this)
         }
     }
 
@@ -200,11 +198,6 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
             }
         }
     }
-
-
-
-
-
 
 }
 

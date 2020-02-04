@@ -1,5 +1,6 @@
 package com.tinfive.nearbyplace.view
 
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
@@ -36,7 +37,6 @@ import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.utils.EqualSpacingItemDecoration
 import com.tinfive.nearbyplace.utils.MapsUtils
 import com.tinfive.nearbyplace.utils.MapsUtils.Companion.getUrl
-import com.tinfive.nearbyplace.utils.showToast
 import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
@@ -96,8 +96,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             true
         }
 
-        observeViewModel()
-        initializeComponent()
+        observeViewModel() //GET LIST MASJID
+        initializeComponent() //LAYOUTING LIST MASJID
 
         //actionbar
         setSupportActionBar(toolbar)
@@ -121,8 +121,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         } else {
             accessMapLiveLocation()
         }
-        observeViewMapsModel()
-        initFilterData()
+        observeViewMapsModel() // ALL ABOUT GMAPS MARKER
+        initFilterData() //GET VALUE FILTER CHECKBOX
     }
 
     private fun checkLocationPermission(): Boolean {
@@ -366,7 +366,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 masjidAdapter.updateMasjid(it)
                 masjidAdapter.setOnItemClickListener(object : ListMasjidAdapter.OnItemClickListener {
                     override fun onItemSelected(masjides: Masjid) {
-                        setOnClickItem(masjides.mosqueName)
+                        setOnClickItem(masjides.mosqueId, this@MainActivity)
                     }
                 })
             }
@@ -388,8 +388,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
-    private fun setOnClickItem(mosqueName: String) {
-        startActivity(Intent(this, InformasiMasjid::class.java))
+    private fun setOnClickItem(mosqueId: Int, context: Context) {
+        val intent = Intent(context, DetailMasjid::class.java)
+        intent.putExtra("key", mosqueId)
+        context.startActivity(intent)
     }
 
     //SEARCH OPTIONS
@@ -511,8 +513,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
         if (valueSelected == 0){
 
         } else {
-            viewModel.submitFilter(1,1,1,1)
-            println("TES MODEL ${submitFilterData()}")
+            viewModel.submitFilter("","","","")
+            println("TES MODEL ${viewModel}")
         }
     }
 

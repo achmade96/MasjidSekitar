@@ -1,10 +1,14 @@
 package com.tinfive.nearbyplace.utils
 
 import android.content.Context
+import android.location.Location
 import android.net.ConnectivityManager
+import android.util.Log
 import com.google.android.gms.maps.model.Circle
+import com.google.android.gms.maps.model.LatLng
+import java.text.DecimalFormat
 import kotlin.math.ln
-
+private lateinit var mLastLocation: Location
 @Suppress("DEPRECATION")
 class MapsUtils {
     companion object{
@@ -51,7 +55,7 @@ class MapsUtils {
                 * Math.cos(deg2rad(theta))))
         dist = Math.acos(dist)
         dist = rad2deg(dist)
-        dist = dist * 60 * 1.1515
+        dist *= 60 * 1.1515
         return dist
     }
 
@@ -61,6 +65,32 @@ class MapsUtils {
 
     fun rad2deg(rad: Double): Double {
         return rad * 180.0 / Math.PI
+    }
+
+    fun CalculationByDistance(StartP: LatLng, EndP: LatLng): Double {
+        val Radius = 6371 // radius of earth in Km
+        val lat1: Double = StartP.latitude
+        val lat2: Double = EndP.latitude
+        val lon1: Double = StartP.longitude
+        val lon2: Double = EndP.longitude
+        val dLat = Math.toRadians(lat2 - lat1)
+        val dLon = Math.toRadians(lon2 - lon1)
+        val a = (Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + (Math.cos(Math.toRadians(lat1))
+                * Math.cos(Math.toRadians(lat2)) * Math.sin(dLon / 2)
+                * Math.sin(dLon / 2)))
+        val c = 2 * Math.asin(Math.sqrt(a))
+        val valueResult = Radius * c
+        val km = valueResult / 1
+        val newFormat = DecimalFormat("####")
+        val kmInDec: Int = Integer.valueOf(newFormat.format(km))
+        val meter = valueResult % 1000
+        val meterInDec: Int = Integer.valueOf(newFormat.format(meter))
+        Log.i(
+            "Radius Value", "" + valueResult + "   KM  " + kmInDec
+                    + " Meter   " + meterInDec
+        )
+        return Radius * c
     }
 
 }

@@ -20,8 +20,19 @@ class ApiRespons {
         @SerializedName("code")
         @Expose
         val code: Int
+    )
 
+    data class DetailRespon(
 
+        @SerializedName("message")
+        @Expose
+        val message: String,
+        @SerializedName("data")
+        @Expose
+        val data: Masjid,
+        @SerializedName("code")
+        @Expose
+        val code: Int
     )
 
     data class FilterRespons(

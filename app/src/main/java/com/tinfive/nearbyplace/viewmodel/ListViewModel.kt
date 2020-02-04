@@ -61,7 +61,6 @@ class ListViewModel : ViewModel() {
                 })
         )
     }
-
     //get Filter Data
     fun submitFilter(full_time: String, ac: String, free_water: String, easy_access: String) {
         loading.value = true
@@ -80,6 +79,7 @@ class ListViewModel : ViewModel() {
             }))
 
     }
+
 
     override fun onCleared() {
         super.onCleared()

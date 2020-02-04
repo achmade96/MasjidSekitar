@@ -6,6 +6,7 @@ import com.tinfive.nearbyplace.model.respons.ApiRespons
 import com.tinfive.nearbyplace.networks.EndPoint.Fasilitas
 import com.tinfive.nearbyplace.networks.EndPoint.Masjid
 import io.reactivex.Observable
+import io.reactivex.Single
 import retrofit2.http.*
 
 interface MasjidApi {
@@ -19,7 +20,10 @@ interface MasjidApi {
     @GET(Fasilitas)
     fun getFilteredMasjid() : Observable<List<Fasilitas>>
 
-    @POST("rest/public/mosque_facilities")
+    @GET("rest/public/mosques/{id}")
+    fun getDetailMosque(@Path (value = "id") id: String): Single<ApiRespons.DetailRespon>
+
+    @GET("rest/public/mosque_facilities")
     @FormUrlEncoded
     fun filterSubmit(@Query (value = "full_time") full_time: String,
                      @Query (value = "ac") ac: String,
