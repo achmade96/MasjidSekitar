@@ -19,12 +19,13 @@ interface MasjidApi {
     @GET("rest/public/mosques/{id}")
     fun getDetailMosque(@Path (value = "id") id: String): Single<ApiRespons.MasjidResponDummy>
 
-    @GET("rest/public/mosque_facilities")
+    @POST("rest/public/mosque_facilities")
     @FormUrlEncoded
-    fun filterSubmit(@Query (value = "full_time") full_time: String,
-                     @Query (value = "ac") ac: String,
-                     @Query (value = "free_water") free_water: String,
-                     @Query (value = "easy_access") easy_access: String) : Observable<ApiRespons.FilterRespons>
+    fun filterSubmit(@Field (value = "full_time") full_time: String,
+                     @Field (value = "ac") ac: String,
+                     @Field (value = "car_parking") car_parking: String,
+                     @Field (value = "free_water") free_water: String,
+                     @Field (value = "easy_access") easy_access: String) : Observable<ApiRespons.FilterRespons>
 
 
 }

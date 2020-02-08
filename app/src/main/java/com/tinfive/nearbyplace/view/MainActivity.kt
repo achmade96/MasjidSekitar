@@ -518,7 +518,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         } else {
 
-            viewModel.submitFilter(valueRespond,valueRespond,valueRespond,valueRespond)
+            viewModel.submitFilter(######################)
         }
     }
 

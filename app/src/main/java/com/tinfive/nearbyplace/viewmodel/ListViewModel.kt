@@ -62,9 +62,9 @@ class ListViewModel : ViewModel() {
         )
     }
     //get Filter Data
-    fun submitFilter(full_time: String, ac: String, free_water: String, easy_access: String) {
+    fun submitFilter(full_time: String, ac: String, car_parking: String, free_water: String, easy_access: String) {
         loading.value = true
-        disposable.add(RetrofitClient.getPostFilter().filterSubmit(full_time, ac, free_water, easy_access)
+        disposable.add(RetrofitClient.getPostFilter().filterSubmit(full_time, ac,car_parking, free_water, easy_access)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ filterRespons ->
