@@ -31,10 +31,10 @@ class MapActivityModel(application: Application): BaseViewModel(application) {
                 })
         )
     }
-    private fun displayData(myPlaces: ApiRespons.MosqueRespon){
+    private fun displayData(myPlaces: ApiRespons.MasjidResponDummy){
 
         if (myPlaces.message.equals("Successfully!")){
-            val masjids: List<Masjid>? = myPlaces.data.data
+            val masjids: List<Masjid>? = myPlaces.data
             masjidsList.value = masjids!!.toList()
             masjidsListError.value = false
             loading.value = false

@@ -22,14 +22,14 @@ class ApiRespons {
         val code: Int
     )
 
-    data class DetailRespon(
+    data class MasjidResponDummy(
 
         @SerializedName("message")
         @Expose
         val message: String,
         @SerializedName("data")
         @Expose
-        val data: Masjid,
+        val data: List<Masjid>,
         @SerializedName("code")
         @Expose
         val code: Int

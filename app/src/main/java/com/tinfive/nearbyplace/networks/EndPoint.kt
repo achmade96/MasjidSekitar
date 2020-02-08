@@ -6,7 +6,7 @@ object EndPoint {
 
     const val BASE_URL_MASJID : String = "https://yukamal.com/"
 
-    const val Masjid : String = "rest/public/mosques"
+    const val Masjid : String = "rest/public/mosques_dummy"
 
     const val Fasilitas : String = "rest/public/mosque_facilities"
 

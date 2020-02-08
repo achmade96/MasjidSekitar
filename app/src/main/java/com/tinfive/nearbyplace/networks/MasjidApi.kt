@@ -1,6 +1,5 @@
 package com.tinfive.nearbyplace.networks
 
-import com.example.nearbyplaces.model.MyPlaces
 import com.tinfive.nearbyplace.model.Fasilitas
 import com.tinfive.nearbyplace.model.respons.ApiRespons
 import com.tinfive.nearbyplace.networks.EndPoint.Fasilitas
@@ -11,17 +10,14 @@ import retrofit2.http.*
 
 interface MasjidApi {
 
-    @GET
-    fun getMarkerPlace(@Url url: String): Observable<MyPlaces>
-
     @GET(Masjid)
-    fun getMosque(): Observable<ApiRespons.MosqueRespon>
+    fun getMosque(): Observable<ApiRespons.MasjidResponDummy>
 
     @GET(Fasilitas)
     fun getFilteredMasjid() : Observable<List<Fasilitas>>
 
     @GET("rest/public/mosques/{id}")
-    fun getDetailMosque(@Path (value = "id") id: String): Single<ApiRespons.DetailRespon>
+    fun getDetailMosque(@Path (value = "id") id: String): Single<ApiRespons.MasjidResponDummy>
 
     @GET("rest/public/mosque_facilities")
     @FormUrlEncoded

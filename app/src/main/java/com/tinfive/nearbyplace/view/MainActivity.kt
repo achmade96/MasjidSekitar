@@ -41,10 +41,12 @@ import com.tinfive.nearbyplace.viewmodel.ListViewModel
 import com.tinfive.nearbyplace.viewmodel.MapActivityModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_bottom_sheet.*
 
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     private var valueSelected : Int = 0
+    private var valueRespond : String =  ""
     private var itung: Int = 0
     lateinit var fasilitasModel: FasilitasFragment
 
@@ -509,12 +511,14 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     }
 
+    //value selected int = 0
+    //value respond string = ""
     private fun submitFilterData() {
         if (valueSelected == 0){
 
         } else {
-            viewModel.submitFilter("","","","")
-            println("TES MODEL ${viewModel}")
+
+            viewModel.submitFilter(valueRespond,valueRespond,valueRespond,valueRespond)
         }
     }
 

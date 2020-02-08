@@ -52,7 +52,7 @@ class ListViewModel : ViewModel() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ mosqueRespons ->
                     //                println("Mosque ${mosqueRespons}")
-                    masjid.value = mosqueRespons.data.data
+                    masjid.value = mosqueRespons.data
                     masjidLoadError.value = false
                     loading.value = false
                 }, { err ->

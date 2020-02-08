@@ -75,6 +75,9 @@ data class Masjid(
     @SerializedName("district")
     @Expose
     val district: District,
+    @SerializedName("facilities")
+    @Expose
+    val fasilitas: String,
     @SerializedName("village")
     @Expose
     val village: String

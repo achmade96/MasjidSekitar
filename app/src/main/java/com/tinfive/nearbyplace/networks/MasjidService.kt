@@ -16,7 +16,7 @@ class MasjidService {
         .build()
         .create(MasjidApi::class.java)
 
-    fun getMasjid(): Observable<ApiRespons.MosqueRespon> {
+    fun getMasjid(): Observable<ApiRespons.MasjidResponDummy> {
         return api.getMosque()
     }
 

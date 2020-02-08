@@ -15,11 +15,11 @@ class DetailMasjidViewModel : ViewModel() {
     val masjidLoadError = MutableLiveData<Boolean>()
     val loading = MutableLiveData<Boolean>()
 
-    fun refresh(id:Int){
+    /*fun refresh(id:Int){
         fetchMasjid(id)
-    }
+    }*/
 
-    private fun fetchMasjid(id:Int) {
+    /*private fun fetchMasjid(id:Int) {
         loading.value = true
         println("data = $id")
         disposable.add(
@@ -36,5 +36,5 @@ class DetailMasjidViewModel : ViewModel() {
                     masjidLoadError.value = true
                     loading.value = false
                 }))
-    }
+    }*/
 }
