@@ -35,15 +35,4 @@ class ApiRespons {
         val code: Int
     )
 
-    data class FilterRespons(
-        @SerializedName("success")
-        @Expose
-        val success: Boolean,
-        @SerializedName("message")
-        @Expose
-        val message: String,
-        @SerializedName("code")
-        @Expose
-        val code: Int
-    )
 }

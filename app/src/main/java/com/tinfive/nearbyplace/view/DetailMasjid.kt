@@ -6,19 +6,16 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
-import com.tinfive.nearbyplace.networks.EndPoint
-import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.viewmodel.DetailMasjidViewModel
-import com.tinfive.nearbyplace.viewmodel.ListViewModel
+import com.tinfive.nearbyplace.viewmodel.MasjidListViewModel
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_detail_masjid.*
 
 class DetailMasjid : AppCompatActivity() {
 
-    lateinit var viewModel: ListViewModel
-    private val masjidAdapter =
-        ListMasjidAdapter(ArrayList())
+    lateinit var viewModel: MasjidListViewModel
+//    private val masjidAdapter =
+//        ListMasjidAdapter(this, ArrayList())
     private var myCompositeDisposable = CompositeDisposable()
 
     var progressDrawable: CircularProgressDrawable? = null
@@ -41,11 +38,6 @@ class DetailMasjid : AppCompatActivity() {
                 tv_alamat.text = it.address
                 tv_latitude.text = it.latitude
                 tv_longitude.text = it.address
-                /*progressDrawable = getProgressDrawable(this)
-                imgTarget = EndPoint.imageUrlPath*/
-                /*it.pic.let {
-                    image_poster.loadImage(imgTarget + it, progressDrawable!!)
-                }*/
             }
         })
     }

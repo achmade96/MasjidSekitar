@@ -8,21 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.adapter.FasilitasAdapter
 import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.view.MainActivity
-import kotlinx.android.synthetic.main.bottom_sheet_filter.*
-import kotlinx.android.synthetic.main.item_bottom_sheet.*
+import com.tinfive.nearbyplace.viewmodel.MasjidListViewModel
 
 
 class FasilitasFragment : BottomSheetDialogFragment() {
-
     companion object {
 
         var mFasilitas: MutableList<FasilitasString> = mutableListOf()
@@ -37,14 +32,20 @@ class FasilitasFragment : BottomSheetDialogFragment() {
 
 
     }
+    private var valueSelected : Int = 0
+    private var valueRespond : String =  ""
+    private var valueFulltime : String =  ""
+    private var valueAc : String =  ""
+    private var valueCar : String =  ""
+    private var valueFree : String =  ""
+    private var valueEasy : String =  ""
+    lateinit var viewModel: MasjidListViewModel
 
     private val mainActivity: MainActivity = MainActivity()
-    private var mAdapterFasilitas = FasilitasAdapter(ArrayList())
+//    private var mAdapterFasilitas = FasilitasAdapter(ArrayList())
     private lateinit var dialog: BottomSheetDialog
     private lateinit var behavior: BottomSheetBehavior<View>
     lateinit var fragmentView: View
-    var checkedFasilitas: MutableList<FasilitasString> = ArrayList()
-    var valueSelected = 0
 
 
     var kategoriName: String = ""
@@ -64,21 +65,18 @@ class FasilitasFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         fragmentView = inflater.inflate(R.layout.bottom_sheet_filter, container, false)
         return fragmentView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRecycle(mFasilitas) //GET BUTTON FILTER
+
+//        initRecycle(mFasilitas) //GET BUTTON FILTER
     }
 
-    private fun initRecycle(mFasilitas: List<FasilitasString>) {
+/*    private fun initRecycle(mFasilitas: List<FasilitasString>) {
         mAdapterFasilitas.updateListFasilitas(mFasilitas)
         recycle_filter.adapter = mAdapterFasilitas
         recycle_filter.setHasFixedSize(true)
@@ -110,7 +108,7 @@ class FasilitasFragment : BottomSheetDialogFragment() {
             mainActivity.onClickEventPassData("CLICK FILTER BLA ${stringBuilder}")
             dialog.dismiss()
         }
-    }
+    }*/
 
 
     private fun setPassData(name: String): String {

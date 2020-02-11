@@ -40,3 +40,37 @@ fun setMargins(view: View, left: Int, top: Int, right: Int, bottom: Int) {
 fun showToast(context: Context , message: String, duration: Int = Toast.LENGTH_LONG) {
     Toast.makeText(context, message, duration).show()
 }
+
+//BOTTOM SHEET OPTIONS
+/*    private fun showBottomSheetDialogFragment() {
+        val bottomSheetFragment = FasilitasFragment.newInstance(fasilitasList)
+        bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
+
+
+
+
+        println("DATA SIZEE ${fasilitasList.size}")
+        println("DATAITUNG $itung")
+
+    }*/
+
+//INI UNTUK MENGAKTIFKAN EFEK UP BUTTON NAV
+/*private fun slideUpDownBottomSheet() {
+    if (bottomSheetBehavior.state != BottomSheetBehavior.STATE_EXPANDED) {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+//            changeToTop()
+    } else {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+//            changeToDown()
+    }
+}*/
+
+/*private fun changeToDown() {
+    setMargins(nav, 5, 0, 5, 20)
+}
+
+private fun changeToTop() {
+    setMargins(nav, 5, 0, 5, 900)
+}*/
+
+//END BOTTOM SHEET OPTIONS

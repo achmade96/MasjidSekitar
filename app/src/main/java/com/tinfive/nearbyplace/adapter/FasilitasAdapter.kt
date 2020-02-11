@@ -1,90 +1,56 @@
 package com.tinfive.nearbyplace.adapter
 
 import android.content.Context
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.CheckBox
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.fragment.FasilitasFragment
-import com.tinfive.nearbyplace.model.FasilitasString
-import kotlinx.android.synthetic.main.item_bottom_sheet.view.*
+import com.tinfive.nearbyplace.model.Fasilitas
 
 
-class FasilitasAdapter(var fasilitasList: MutableList<FasilitasString>) : RecyclerView.Adapter<FasilitasAdapter.FasilitasViewHolder>() {
-    private val limit: Int = 5
-    private var context: Context? = null
+class FasilitasAdapter(internal var context: Context,
+                       internal var categories:List<Fasilitas>) : RecyclerView.Adapter<FasilitasAdapter.ChooseViewHolder>(){
 
+    private val itemStateArray = SparseBooleanArray()
+    internal var selected_category:MutableList<Fasilitas> = ArrayList()
 
-    private var mOnItemClickListener: OnItemClickListener? = null
+    inner class ChooseViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView){
+        internal var ckb_options : CheckBox
+        init {
+            ckb_options = itemView.findViewById(R.id.ckb_option) as CheckBox
+            ckb_options.setOnCheckedChangeListener{ _, b ->
+                itemStateArray.put(adapterPosition,b)
+                if(b)
+                    selected_category.add(categories[adapterPosition])
+                else
+                    selected_category.remove(categories[adapterPosition])
+            }
+        }
+    }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FasilitasViewHolder {
-        context = parent.context
-        val layoutInflate = LayoutInflater.from(context).inflate(R.layout.item_bottom_sheet, parent, false)
-        return FasilitasViewHolder(layoutInflate)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChooseViewHolder {
+        val itemView = LayoutInflater.from(context).inflate(R.layout.item_bottom_sheet,parent,false)
+        return ChooseViewHolder(itemView)
     }
 
     override fun getItemCount(): Int {
-        return fasilitasList.size
-
+        return categories.size
     }
 
-    override fun onBindViewHolder(holder: FasilitasViewHolder, position: Int) {
-        holder.clear()
-        holder.onBind(position)
+    override fun onBindViewHolder(holder: ChooseViewHolder, position: Int) {
+        holder.ckb_options.text = categories[position].namaFasilitas
+        holder.ckb_options.isChecked = itemStateArray.get(position)
     }
 
-    fun updateListFasilitas(falItem: List<FasilitasString>) {
-        this.fasilitasList.clear()
-        this.fasilitasList.addAll(falItem)
-        notifyDataSetChanged()
-    }
-
-    interface OnItemClickListener {
-        fun onItemSelected(kategori: FasilitasString)
-    }
-
-    internal fun setOnItemClickListener(listener: OnItemClickListener) {
-        mOnItemClickListener = listener
-    }
-
-
-
-    inner class FasilitasViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
-
-        override fun onClick(v: View?) {
-            mOnItemClickListener?.onItemSelected(fasilitasList[adapterPosition])
+    val filterArray:String
+        get(){
+            val id_selected = ArrayList<Int>()
+            for(fasilitas in selected_category)
+                id_selected.add(fasilitas.id)
+            return Gson().toJson(id_selected)
         }
-
-        fun clear() {
-        }
-
-        fun onBind(position: Int) {
-            val (id,name,isSelected) = fasilitasList[position]
-            inflateData(id,name,isSelected)
-        }
-
-        private fun inflateData(id: Int, name: String, isSelected: Boolean) {
-
-            itemView.ckb_option.text = name
-            itemView.ckb_option.isChecked = fasilitasList[adapterPosition].isSelected
-            itemView.ckb_option.text = fasilitasList[adapterPosition].name
-
-            itemView.ckb_option.tag = adapterPosition
-            itemView.ckb_option.setOnClickListener {
-                val ckbox = itemView.ckb_option.tag as Int
-                Toast.makeText(context, fasilitasList[ckbox].name + " clicked!", Toast.LENGTH_SHORT).show()
-
-
-                println("CHCECK BOX $name")
-                fasilitasList[ckbox].isSelected = !fasilitasList[ckbox].isSelected
-
-
-            }
-            itemView.setOnClickListener(this)
-        }
-    }
-
 }

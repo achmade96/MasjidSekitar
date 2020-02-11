@@ -35,7 +35,6 @@ import com.tinfive.nearbyplace.R
 import com.tinfive.nearbyplace.adapter.FasilitasAdapter
 import com.tinfive.nearbyplace.adapter.ListMasjidAdapter
 import com.tinfive.nearbyplace.adapter.MasjidFasilitasAdapter
-import com.tinfive.nearbyplace.model.FasilitasString
 import com.tinfive.nearbyplace.model.Masjid
 import com.tinfive.nearbyplace.networks.EndPoint.MY_PERMISSION_CODE
 import com.tinfive.nearbyplace.networks.MasjidApi
@@ -53,10 +52,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), OnMapReadyCallback {
     //fasilitas
-    private var itung: Int = 0
-    var fasilitasList: MutableList<FasilitasString> = mutableListOf()
-    internal lateinit var restApi: MasjidApi
-    private lateinit var masjidListFilter: MutableList<Masjid>
+    internal lateinit var restApi: MasjidApi //get list fasilitas
 
     //MAPS
     private lateinit var mMap: GoogleMap
@@ -175,7 +171,10 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                     map.isVisible == true
                     map.view?.visibility = View.GONE
                     recycler_masjids.visibility = View.VISIBLE
-                    recycler_masjids.adapter = MasjidFasilitasAdapter(baseContext, filterCategories) // HASIL DILEMPAR KE ADAPTER YANG BERBEDA
+                    recycler_masjids.adapter = MasjidFasilitasAdapter(
+                        baseContext,
+                        filterCategories
+                    ) // HASIL DILEMPAR KE ADAPTER YANG BERBEDA
 
                 },
                     {
