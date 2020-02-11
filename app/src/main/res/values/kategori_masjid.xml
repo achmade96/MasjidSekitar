@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="kategori_masjid">
-        <item>Pilih Kategori</item>
-        <item>Masjid Agung</item>
-        <item>Masjid Besar</item>
-        <item>Masjid Kecil</item>
-    </string-array>
-</resources>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="fasilitas_masjid">
-        <item>Air Conditioner</item>
-        <item>Parkir Mobil</item>
-        <item>Water Closet</item>
-    </string-array>
-</resources>

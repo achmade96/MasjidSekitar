@@ -1,14 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="fasilitas">
-        <item>Full Time</item>
-        <item>Air Conditioner</item>
-        <item>Car Parking</item>
-        <item>Free Mineral Water</item>
-        <item>Easy Way Access</item>
-
-
-    </string-array>
-
 </resources>
