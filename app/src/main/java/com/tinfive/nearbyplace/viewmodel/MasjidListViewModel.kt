@@ -23,6 +23,26 @@ class MasjidListViewModel : ViewModel() {
         fetchMasjid()
     }
 
+    /*fun loadFasilitas() {
+        fetchFacilities()
+    }
+
+    //GET LIST FASILITAS
+    private fun fetchFacilities() {
+        loading.value = true
+        disposable.add(
+            RetrofitClient.getFacilitiesList().getFilteredMasjid()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ facilitiesRespon ->
+                    fasilitasData.value = facilitiesRespon
+//                    println("DATA FASILITIES ${facilitiesRespon.size}")
+                }, { err ->
+                    //                println("DATA ${err.message}")
+                })
+        )
+    }*/
+
     //GET LIST VIEW MASJID
     private fun fetchMasjid() {
         loading.value = true

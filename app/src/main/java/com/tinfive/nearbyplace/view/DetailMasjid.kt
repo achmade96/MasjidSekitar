@@ -35,9 +35,9 @@ class DetailMasjid : AppCompatActivity() {
             mosques?.let {
                 println("DATA recive API ${it.mosqueName}")
                 tv_masjid.text = it.mosqueName
-                tv_alamat.text = it.address
-                tv_latitude.text = it.latitude
-                tv_longitude.text = it.address
+                tv_alamat.text = it.mosqueAddress
+                tv_latitude.text = it.mosqueLat
+                tv_longitude.text = it.mosqueLng
             }
         })
     }

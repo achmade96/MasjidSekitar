@@ -78,50 +78,20 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
                 mosqueType,
                 mosqueCode,
                 mosqueName,
-                mosqueIdentity,
-                surfaceArea,
-                buildingArea,
-                kelId,
-                los,
-                since,
-                rek,
-                address,
-                latitude,
-                longitude,
-                estimate,
-                estimateDate,
-                pic,
-                description,
-                bank,
-                province,
-                regency,
-                district,
-                village
+                mosqueAddress,
+                mosqueLat,
+                mosqueLng,
+                mosquePict
             ) = masjidListFilter[position]
             inflateData(
                 mosqueId,
                 mosqueType,
                 mosqueCode,
                 mosqueName,
-                mosqueIdentity,
-                surfaceArea,
-                buildingArea,
-                kelId,
-                los,
-                since,
-                rek,
-                address,
-                latitude,
-                longitude,
-                estimate,
-                estimateDate,
-                pic,
-                description,
-                bank,
-                province,
-                regency,
-                district,
-                village
+                mosqueAddress,
+                mosqueLat,
+                mosqueLng,
+                mosquePict
             )
         }
 
@@ -130,25 +100,10 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
             mosqueType: String,
             mosqueCode: String,
             mosqueName: String,
-            mosqueIdentity: String,
-            surfaceArea: String,
-            buildingArea: String,
-            kelId: String,
-            los: String,
-            since: String,
-            rek: String,
-            address: String,
-            latitude: String,
-            longitude: String,
-            estimate: String,
-            estimateDate: String,
-            pic: String,
-            description: String,
-            bank: Bank,
-            province: Province,
-            regency: Regency,
-            district: District,
-            village: String
+            mosqueAddress: String,
+            mosqueLat: String,
+            mosqueLng: String,
+            mosquePict: String
         ) {
             val progressDrawable: CircularProgressDrawable = getProgressDrawable(itemView.context)
             val imgTarget = EndPoint.imageUrlPath
@@ -156,11 +111,11 @@ class ListMasjidAdapter(var masjid: MutableList<Masjid>) :
             mosqueName.let {
                 itemView.titleTv.text = it
             }
-            address.let {
+            mosqueAddress.let {
                 itemView.descTv.text = it
 //                    String.format("%s, %s, %s", it, province.provinceName, regency.regencyName, district.districtName)
             }
-            pic.let {
+            mosquePict.let {
                 itemView.iconIv.loadImage(imgTarget + it, progressDrawable)
             }
 

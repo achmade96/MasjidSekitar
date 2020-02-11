@@ -4,19 +4,19 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Filter
-import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.tinfive.nearbyplace.R
-import com.tinfive.nearbyplace.model.*
+import com.tinfive.nearbyplace.model.Masjid
 import com.tinfive.nearbyplace.networks.EndPoint
 import com.tinfive.nearbyplace.utils.getProgressDrawable
 import com.tinfive.nearbyplace.utils.loadImage
 import kotlinx.android.synthetic.main.cardview_masjidsekitar.view.*
 
-class MasjidFasilitasAdapter (var context: Context,
-                              var masjid: List<Masjid>) :
+class MasjidFasilitasAdapter(
+    var context: Context,
+    var masjid: List<Masjid>
+) :
     RecyclerView.Adapter<MasjidFasilitasAdapter.MasjidViewHolder>() {
 
     //    private var context: Context? = null
@@ -30,7 +30,8 @@ class MasjidFasilitasAdapter (var context: Context,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MasjidViewHolder {
         context = parent.context
-        val layoutInflate = LayoutInflater.from(context).inflate(R.layout.cardview_masjidsekitar, parent, false)
+        val layoutInflate =
+            LayoutInflater.from(context).inflate(R.layout.cardview_masjidsekitar, parent, false)
         return MasjidViewHolder(layoutInflate)
     }
 
@@ -61,50 +62,20 @@ class MasjidFasilitasAdapter (var context: Context,
                 mosqueType,
                 mosqueCode,
                 mosqueName,
-                mosqueIdentity,
-                surfaceArea,
-                buildingArea,
-                kelId,
-                los,
-                since,
-                rek,
-                address,
-                latitude,
-                longitude,
-                estimate,
-                estimateDate,
-                pic,
-                description,
-                bank,
-                province,
-                regency,
-                district,
-                village
+                mosqueAddress,
+                mosqueLat,
+                mosqueLng,
+                mosquePict
             ) = masjidListFilter[position]
             inflateData(
                 mosqueId,
                 mosqueType,
                 mosqueCode,
                 mosqueName,
-                mosqueIdentity,
-                surfaceArea,
-                buildingArea,
-                kelId,
-                los,
-                since,
-                rek,
-                address,
-                latitude,
-                longitude,
-                estimate,
-                estimateDate,
-                pic,
-                description,
-                bank,
-                province,
-                regency,
-                district,
-                village
+                mosqueAddress,
+                mosqueLat,
+                mosqueLng,
+                mosquePict
             )
         }
 
@@ -113,25 +84,10 @@ class MasjidFasilitasAdapter (var context: Context,
             mosqueType: String,
             mosqueCode: String,
             mosqueName: String,
-            mosqueIdentity: String,
-            surfaceArea: String,
-            buildingArea: String,
-            kelId: String,
-            los: String,
-            since: String,
-            rek: String,
-            address: String,
-            latitude: String,
-            longitude: String,
-            estimate: String,
-            estimateDate: String,
-            pic: String,
-            description: String,
-            bank: Bank,
-            province: Province,
-            regency: Regency,
-            district: District,
-            village: String
+            mosqueAddress: String,
+            mosqueLat: String,
+            mosqueLng: String,
+            mosquePict: String
         ) {
             val progressDrawable: CircularProgressDrawable = getProgressDrawable(itemView.context)
             val imgTarget = EndPoint.imageUrlPath
@@ -139,15 +95,15 @@ class MasjidFasilitasAdapter (var context: Context,
             mosqueName.let {
                 itemView.titleTv.text = it
             }
-            address.let {
+            mosqueAddress.let {
                 itemView.descTv.text = it
 //                    String.format("%s, %s, %s", it, province.provinceName, regency.regencyName, district.districtName)
             }
-            pic.let {
+            mosquePict.let {
                 itemView.iconIv.loadImage(imgTarget + it, progressDrawable)
             }
 
-            itemView.setOnClickListener (this)
+            itemView.setOnClickListener(this)
         }
     }
 

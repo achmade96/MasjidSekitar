@@ -357,8 +357,8 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
                 for (element in masjidListMap) {
                     val markerOptions = MarkerOptions()
                     val googlePlace = element
-                    val lat = googlePlace.latitude.toDouble()
-                    val lng = googlePlace.longitude.toDouble()
+                    val lat = googlePlace.mosqueLat.toDouble()
+                    val lng = googlePlace.mosqueLng.toDouble()
                     val placeName = googlePlace.mosqueName
                     val latLng = LatLng(lat, lng)
                     println("markern $placeName")
